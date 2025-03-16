@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\PostExport;
+use App\Exports\PostsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PostController extends Controller
 {
@@ -58,6 +61,8 @@ class PostController extends Controller
 
         $validatedData = $request->validated();
         $validatedData['user_id'] = auth()->id();
+        $validatedData['number_of_shares'] = 0;
+
         $post = Post::create($validatedData);
 
         $categories = explode(",", $request->categories);
@@ -84,10 +89,17 @@ class PostController extends Controller
     public function update(Post $post, StorePostRequest $request)
     {
         $this->authorize('post-edit');
+
         if ($post->user_id !== auth()->id() && !auth()->user()->hasPermissionTo('post-all')) {
             return response()->json(['status' => 405, 'success' => false, 'message' => 'You can only edit your own posts']);
         } else {
-            $post->update($request->validated());
+            $validatedData = $request->validated();
+
+            $validatedData['share_holders_json'] = json_encode($request->share_holders_json);
+
+            $validatedData['number_of_shares'] = count($request->share_holders_json);
+
+            $post->update($validatedData);
 
             $category = Category::findMany($request->categories);
             $post->categories()->sync($category);
@@ -123,5 +135,15 @@ class PostController extends Controller
     public function getPost($id)
     {
         return Post::with('categories', 'user', 'media')->findOrFail($id);
+    }
+
+    public function export()
+    {
+        return Excel::download(new PostsExport, 'Kurbanlar-Listesi.xlsx');
+    }
+
+    public function sharesExport()
+    {
+        return Excel::download(new PostsExport, 'Kurbanlar-Hissedar-Listesi.xlsx');
     }
 }

@@ -24,11 +24,18 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'age' => $this->age,
+            'order' => $this->order,
+            'amount' => $this->amount,
+            'status' => $this->status,
+            'kg' => $this->kg,
+            'share_holders_json' => json_decode($this->share_holders_json),
+            'number_of_shares' => $this->number_of_shares,
             'categories' => $this->categories,
             'content' => $this->content,
             'original_image' => count($this->getMedia('*')) > 0 ? $this->getMedia('*')[0]->getUrl() : null,
             'resized_image' => $resized_image,
-            'created_at' => $this->created_at->toDateString()
+            'created_at' => date('d/m/Y H:i', strtotime($this->created_at))
         ];
     }
 }

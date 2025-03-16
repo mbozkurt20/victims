@@ -4,6 +4,14 @@ import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
 export default defineConfig({
+    base: '/',
+    server: {
+        host:true,
+        port: 5173,
+    },
+    build: {
+        outDir: 'dist',
+    },
     plugins: [
         laravel({
             input: [

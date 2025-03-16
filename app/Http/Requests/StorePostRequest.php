@@ -25,6 +25,12 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title' => 'required',
+            'age' => 'required',
+            'status' => 'required',
+            'amount' => 'required',
+            'order' => 'required',
+            'kg' => 'required',
+            'share_holders_json' => 'nullable',
             'content' => 'required',
             'categories' => 'required'
         ];

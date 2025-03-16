@@ -18,7 +18,7 @@ class Post extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
 
-    protected $fillable = ['title', 'content', 'user_id', 'name', 'text',];
+    protected $fillable = ['title', 'content', 'user_id', 'name', 'text','kg','order','amount','age','number_of_shares','status','share_holders_json'];
 
     public function getActivitylogOptions(): LogOptions
     {

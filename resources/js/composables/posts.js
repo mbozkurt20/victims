@@ -5,6 +5,13 @@ export default function usePosts() {
     const posts = ref({})
     const post = ref({
         title: '',
+        kg: '',
+        order: '',
+        status: '',
+        number_of_shares: '',
+        share_holders_json: '',
+        amount: '',
+        age: '',
         content: '',
         category_id: '',
         thumbnail: ''
@@ -85,10 +92,10 @@ export default function usePosts() {
 
         axios.put('/api/posts/' + post.id, post)
             .then(response => {
-                router.push({name: 'posts.index'})
+               // router.push({name: 'posts.index'})
                 swal({
                     icon: 'success',
-                    title: 'Post updated successfully'
+                    title: 'Kurban Bilgileri Kaydedildi'
                 })
             })
             .catch(error => {

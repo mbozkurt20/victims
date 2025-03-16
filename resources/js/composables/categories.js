@@ -50,7 +50,7 @@ export default function useCategories() {
                 router.push({name: 'categories.index'})
                 swal({
                     icon: 'success',
-                    title: 'Category saved successfully'
+                    title: 'Kategori Başarıyla Eklendi'
                 })
             })
             .catch(error => {
@@ -72,7 +72,7 @@ export default function useCategories() {
                 router.push({name: 'categories.index'})
                 swal({
                     icon: 'success',
-                    title: 'Category updated successfully'
+                    title: 'Kategori Başarıyla Güncellendi'
                 })
             })
             .catch(error => {

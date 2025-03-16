@@ -8,7 +8,7 @@
                         <!-- Title -->
                         <div class="mb-3">
                             <label for="post-title" class="form-label">
-                                Title
+                                Küpe Numarası / İsim
                             </label>
                             <input v-model="post.title" id="post-title" type="text" class="form-control">
                             <div class="text-danger mt-1">
@@ -20,10 +20,115 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="post-title" class="form-label">
+                                       Kilo
+                                    </label>
+                                    <input v-model="post.kg" id="post-kg" type="number" class="form-control">
+                                    <div class="text-danger mt-1">
+                                        {{ errors.kg }}
+                                    </div>
+                                    <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.kg">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="post-age" class="form-label">
+                                        Yaşı
+                                    </label>
+                                    <input v-model="post.age" id="post-age" type="number" class="form-control">
+                                    <div class="text-danger mt-1">
+                                        {{ errors.age }}
+                                    </div>
+                                    <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.age">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="post-amount" class="form-label">
+                                        Fiyat
+                                    </label>
+                                    <input v-model="post.amount" id="post-amount" type="number" class="form-control">
+                                    <div class="text-danger mt-1">
+                                        {{ errors.amount }}
+                                    </div>
+                                    <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.amount">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="post-order" class="form-label">
+                                        Kesim Sırası
+                                    </label>
+                                    <input v-model="post.order" id="post-order" type="number" class="form-control">
+                                    <div class="text-danger mt-1">
+                                        {{ errors.order }}
+                                    </div>
+                                    <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.order">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!--                            <div class="col-md-4">-->
+<!--                                <div class="mb-3">-->
+<!--                                    <label for="post-number_of_shares" class="form-label">-->
+<!--                                        Hissedar Sayısı-->
+<!--                                    </label>-->
+<!--                                    <input v-model="post.number_of_shares" id="post-number_of_shares" type="number" maxlength="7" class="form-control">-->
+<!--                                    <div class="text-danger mt-1">-->
+<!--                                        {{ errors.number_of_shares }}-->
+<!--                                    </div>-->
+<!--                                    <div class="text-danger mt-1">-->
+<!--                                        <div v-for="message in validationErrors?.number_of_shares">-->
+<!--                                            {{ message }}-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="post-order" class="form-label">
+                                       Durumu
+                                    </label>
+                                    <select v-model="post.status" class="form-control" name="status" id="">
+                                        <option value="pending">Satış Bekliyor</option>
+                                        <option value="sold">Satışta</option>
+                                        <option value="not_ready">Hazır Değil</option>
+                                    </select>
+                                    <div class="text-danger mt-1">
+                                        {{ errors.status }}
+                                    </div>
+                                    <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.status">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Content -->
                         <div class="mb-3">
                             <label for="post-content" class="form-label">
-                                Content
+                                Not
                             </label>
                             <TextEditorComponent v-model="post.content"/>
                             <div class="text-danger mt-1">
@@ -37,6 +142,8 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
@@ -47,16 +154,12 @@
                             </svg> Action
                         </h6>
                         <div class="mt-3 text-center">
-                            <button :disabled="isLoading" class="btn btn btn-outline-primary me-2">
+                            <button :disabled="isLoading" class="btn btn btn-success me-2">
                                 <div v-show="isLoading" class=""></div>
                                 <span v-if="isLoading">Processing...</span>
-                                <span v-else>Save Draft</span>
+                                <span v-else>Kaydet</span>
                             </button>
-                            <button :disabled="isLoading" class="btn btn-primary">
-                                <div v-show="isLoading" class=""></div>
-                                <span v-if="isLoading">Processing...</span>
-                                <span v-else>Publish</span>
-                            </button>
+                            <a class="btn btn-primary" href="/admin/posts">Kurbanlar</a>
                         </div>
                         <h6 class="mt-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
@@ -120,25 +223,39 @@ import {required, min} from "@/validation/rules"
 
 defineRule('required', required)
 defineRule('min', min);
-
-const dropZoneActive = ref(true)
-
 // Define a validation schema
 const schema = {
-    title: 'required|min:5',
-    content: 'required|min:50',
+    title: 'required|min:1',
+    age: 'required',
+    order: 'required',
+    status: 'required',
+    amount: 'required',
+    kg: 'required',
+    content: 'required|min:5',
     categories: 'required'
 }
 // Create a form context with the validation schema
 const {validate, errors} = useForm({validationSchema: schema})
 // Define actual fields for validation
 const {value: title} = useField('title', null, {initialValue: ''});
+const {value: age} = useField('age', null, {initialValue: ''});
+const {value: status} = useField('status', null, {initialValue: ''});
+const {value: number_of_shares} = useField('number_of_shares', null, {initialValue: 0});
+const {value: amount} = useField('amount', null, {initialValue: ''});
+const {value: kg} = useField('kg', null, {initialValue: ''});
+const {value: order} = useField('order', null, {initialValue: ''});
 const {value: content} = useField('content', null, {initialValue: ''});
 const {value: categories} = useField('categories', null, {initialValue: '', label: 'category'});
 const {categoryList, getCategoryList} = useCategories()
 const {storePost, validationErrors, isLoading} = usePosts()
 const post = reactive({
     title,
+    age,
+    status,
+    number_of_shares,
+    amount,
+    kg,
+    order,
     content,
     categories,
     thumbnail: ''

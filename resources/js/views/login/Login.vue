@@ -20,7 +20,7 @@
                                 <!-- Password -->
                                 <div class="mb-4">
                                     <label for="password" class="form-label">
-                                        {{ $t('password') }}
+                                        {{ $t('Şifre') }}
                                     </label>
                                     <input v-model="loginForm.password" id="password" type="password" class="form-control" autocomplete="current-password">
                                     <!-- Validation Errors -->
@@ -39,13 +39,14 @@
                                 </div>
 
                                 <!-- Buttons -->
-                                <div class="flex items-center justify-end mt-4">
+                                <div class="flex items-center justify-end mt-4 mb-4">
                                     <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
-                                        {{ $t('login') }}
+                                        {{ $t('Giriş Yap') }}
                                     </button>
                                 </div>
                             </div>
-                            <router-link :to="{name: 'auth.forgot-password'}">{{ $t('forgot_password')}}</router-link>
+
+                            <router-link class="mt-3" :to="{name: 'auth.forgot-password'}">{{ $t('forgot_password')}}</router-link>
                         </form>
                     </div>
                 </div>

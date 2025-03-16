@@ -107,37 +107,37 @@ export default [
                 name: 'posts.index',
                 path: 'posts',
                 component: PostsIndex,
-                meta: { breadCrumb: 'Posts' }
+                meta: { breadCrumb: 'Kurbanlar' }
             },
             {
                 name: 'posts.create',
                 path: 'posts/create',
                 component: PostsCreate,
-                meta: { breadCrumb: 'Add new post' }
+                meta: { breadCrumb: 'Yeni Kurban Ekle' }
             },
             {
                 name: 'posts.edit',
                 path: 'posts/edit/:id',
                 component: PostsEdit,
-                meta: { breadCrumb: 'Edit post' }
+                meta: { breadCrumb: 'Kurban İşlemler' }
             },
             {
                 name: 'categories.index',
                 path: 'categories',
                 component: () => import('../views/admin/categories/Index.vue'),
-                meta: { breadCrumb: 'Categories' }
+                meta: { breadCrumb: 'Kategoriler' }
             },
             {
                 name: 'categories.create',
                 path: 'categories/create',
                 component: () => import('../views/admin/categories/Create.vue'),
-                meta: { breadCrumb: 'Add new category' }
+                meta: { breadCrumb: 'Yeni Kategori Ekle' }
             },
             {
                 name: 'categories.edit',
                 path: 'categories/edit/:id',
                 component: () => import('../views/admin/categories/Edit.vue'),
-                meta: { breadCrumb: 'Edit Category' }
+                meta: { breadCrumb: 'Kategori Düzenle' }
             },
             {
                 name: 'permissions.index',
@@ -185,7 +185,7 @@ export default [
                 name: 'users.create',
                 path: 'users/create',
                 component: () => import('../views/admin/users/Create.vue'),
-                meta: { breadCrumb: 'Add New' }
+                meta: { breadCrumb: 'Yeni Ekle' }
             },
             {
                 name: 'users.edit',

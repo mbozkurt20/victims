@@ -7,7 +7,7 @@
                         <!-- Title -->
                         <div class="mb-3">
                             <label for="post-name" class="form-label">
-                                Title
+                                Kategori Başlığı
                             </label>
                             <input v-model="category.name" id="post-name" type="text" class="form-control">
                             <div class="text-danger mt-1">
@@ -24,7 +24,7 @@
                             <button :disabled="isLoading" class="btn btn-primary">
                                 <div v-show="isLoading" class=""></div>
                                 <span v-if="isLoading">Processing...</span>
-                                <span v-else>Save</span>
+                                <span v-else>Kaydet</span>
                             </button>
                         </div>
                     </form>

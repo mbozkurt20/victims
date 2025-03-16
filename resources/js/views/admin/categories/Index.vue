@@ -3,14 +3,14 @@
         <div class="col-md-12">
             <div class="card border-0">
                 <div class="card-header bg-transparent">
-                    <h5 class="float-start">Categories</h5>
+                    <h5 class="float-start">Kategoriler</h5>
                     <router-link v-if="can('category-create')" :to="{ name: 'categories.create' }" class="btn btn-primary btn-sm float-end">
-                        Create Category
+                        Kategori Ekle
                     </router-link>
                 </div>
                 <div class="card-body shadow-sm">
                     <div class="mb-4">
-                        <input v-model="search_global" type="text" placeholder="Search..."
+                        <input v-model="search_global" type="text" placeholder="Ara..."
                                class="form-control w-25">
                     </div>
                     <div class="table-responsive">
@@ -20,12 +20,12 @@
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <input v-model="search_id" type="text"
                                            class="inline-block mt-1 form-control"
-                                           placeholder="Filter by ID">
+                                           placeholder="Id ile ara">
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <input v-model="search_title" type="text"
                                            class="inline-block mt-1 form-control"
-                                           placeholder="Filter by Title">
+                                           placeholder="Başlık ile ara">
                                 </th>
                                 <th class="px-6 py-3 text-start"></th>
                                 <th class="px-6 py-3 text-start"></th>
@@ -55,7 +55,7 @@
                                          @click="updateOrdering('title')">
                                         <div class="font-medium text-uppercase"
                                              :class="{ 'font-bold text-blue-600': orderColumn === 'title' }">
-                                            Title
+                                            Başlık
                                         </div>
                                         <div class="select-none">
                                 <span :class="{
@@ -89,7 +89,7 @@
                                     </div>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    Actions
+                                    İşlemler
                                 </th>
                             </tr>
                             </thead>
@@ -107,10 +107,10 @@
                                 <td class="px-6 py-4 text-sm">
                                     <router-link v-if="can('category-edit')"
                                                  :to="{ name: 'categories.edit', params: { id: post.id } }"
-                                                 class="badge bg-primary">Edit
+                                                 class="badge bg-primary">Düzenle
                                     </router-link>
                                     <a href="#" v-if="can('category-delete')" @click.prevent="deleteCategory(post.id)"
-                                       class="ms-2 badge bg-danger">Delete</a>
+                                       class="ms-2 badge bg-danger">Sil</a>
                                 </td>
                             </tr>
                             </tbody>
