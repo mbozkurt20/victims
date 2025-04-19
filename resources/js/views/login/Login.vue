@@ -20,7 +20,7 @@
                                 <!-- Password -->
                                 <div class="mb-4">
                                     <label for="password" class="form-label">
-                                        {{ $t('Şifre') }}
+                                        Şifre
                                     </label>
                                     <input v-model="loginForm.password" id="password" type="password" class="form-control" autocomplete="current-password">
                                     <!-- Validation Errors -->
@@ -34,19 +34,19 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" v-model="loginForm.remember" id="flexCheckIndeterminate">
                                     <label class="form-check-label" for="flexCheckIndeterminate">
-                                        {{ $t('remember_me') }}
+                                       Beni Hatırla
                                     </label>
                                 </div>
 
                                 <!-- Buttons -->
                                 <div class="flex items-center justify-end mt-4 mb-4">
                                     <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
-                                        {{ $t('Giriş Yap') }}
+                                        Giriş Yap
                                     </button>
                                 </div>
                             </div>
 
-                            <router-link class="mt-3" :to="{name: 'auth.forgot-password'}">{{ $t('forgot_password')}}</router-link>
+<!--                            <router-link class="mt-3" :to="{name: 'auth.forgot-password'}">Şi</router-link>-->
                         </form>
                     </div>
                 </div>

@@ -54,7 +54,7 @@ export default function useAuth() {
                 await loginUser()
                 swal({
                     icon: 'success',
-                    title: 'Login successfully',
+                    title: 'Giriş Başarılı',
                     showConfirmButton: false,
                     timer: 1500
                 })
