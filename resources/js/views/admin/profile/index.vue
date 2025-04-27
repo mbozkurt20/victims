@@ -1,12 +1,12 @@
 <template>
     <div class="card border-0">
         <div class="card-header bg-transparent">
-            <h5 class="float-start">Profile</h5>
+            <h5 class="float-start">Profil</h5>
         </div>
         <div class="card-body">
             <form @submit.prevent="submitForm">
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">İsim</label>
                     <input type="text" v-model="profile.name" class="form-control" id="name">
                     <div class="text-danger mt-1">
                         {{ errors.name }}
@@ -33,7 +33,7 @@
                     <button :disabled="isLoading" class="btn btn-primary">
                         <div v-show="isLoading" class=""></div>
                         <span v-if="isLoading">Processing...</span>
-                        <span v-else>Update</span>
+                        <span v-else>Güncelle</span>
                     </button>
                 </div>
             </form>

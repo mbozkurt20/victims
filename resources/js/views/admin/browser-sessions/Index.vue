@@ -7,7 +7,7 @@ const sessions = ref([])
 
 const logOutOtherDevices = async () => {
     const { value: password } = await swal.fire({
-        title: "Are you sure?",
+        title: "Emin misiniz?",
         input: "password",
         inputPlaceholder: "Enter your current password",
         inputAttributes: {

@@ -1,8 +1,8 @@
 <template>
-    <nav class="navbar navbar-expand-lg sticky-top flex-md-nowrap shadow-sm" style="background-color: #e3f2fd;">
+    <nav class="navbar navbar-expand-lg sticky-top flex-md-nowrap shadow-sm" style="background-color: #db8b00;">
         <div class="container-fluid">
             <router-link to="/" class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 nuxt-link-active mini">
-                <span>Eyvan</span>
+                <h3 class="text-white fw-bold">{{ user.name }}</h3>
             </router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -16,22 +16,21 @@
                             Posts
                         </router-link>
                     </li> -->
-                    <LocaleSwitcher/>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle text-white display-4 fw-bold" href="#" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false">
-                            Hi, {{ user.name }}
+                            Merhaba, {{ user.name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
                             <li>
                                 <router-link :to="{ name: 'profile.index' }" class="dropdown-item">Profile</router-link>
                             </li>
-                            <li><a class="dropdown-item" href="#">Setting</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" :class="{ 'opacity-25': processing }" :disabled="processing"
-                                   href="javascript:void(0)" @click="logout">Logout</a></li>
+                                   href="javascript:void(0)" @click="logout">Çıkış Yap</a></li>
                         </ul>
                     </li>
                 </ul>

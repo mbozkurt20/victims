@@ -91,7 +91,7 @@ export default function useUsers() {
 
     const deleteUser = async (id) => {
         swal({
-            title: 'Are you sure?',
+            title: 'Emin misiniz?',
             text: 'You won\'t be able to revert this action!',
             icon: 'warning',
             showCancelButton: true,
@@ -109,7 +109,7 @@ export default function useUsers() {
                             router.push({name: 'users.index'})
                             swal({
                                 icon: 'success',
-                                title: 'User deleted successfully'
+                                title: 'Kullanıcı Başarıyla Silindi'
                             })
                         })
                         .catch(error => {

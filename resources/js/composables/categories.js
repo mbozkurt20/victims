@@ -85,7 +85,7 @@ export default function useCategories() {
 
     const deleteCategory = async (id) => {
         swal({
-            title: 'Are you sure?',
+            title: 'Emin misiniz?',
             text: 'You won\'t be able to revert this action!',
             icon: 'warning',
             showCancelButton: true,

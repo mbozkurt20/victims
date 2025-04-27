@@ -116,7 +116,7 @@ export default function useRoles() {
 
     const deleteRole = async (id) => {
         swal({
-            title: 'Are you sure?',
+            title: 'Emin misiniz?',
             text: 'You won\'t be able to revert this action!',
             icon: 'warning',
             showCancelButton: true,
