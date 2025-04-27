@@ -26,6 +26,7 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'age' => $this->age,
             'order' => $this->order,
+            'order_date' => $this->order_date,
             'amount' => $this->amount,
             'status' => $this->status,
             'kg' => $this->kg,

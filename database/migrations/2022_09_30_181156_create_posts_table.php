@@ -21,11 +21,13 @@ return new class extends Migration
             $table->decimal('amount');
             $table->integer('age')->nullable();
             $table->integer('order')->nullable();
+            $table->string('order_date')->nullable();
             $table->integer('number_of_shares'); //hisse hsayısı
             $table->longText('content');
             $table->string('status')->default('pending');
             $table->json('share_holders_json')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -88,6 +88,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="post-order-date" class="form-label">
+                                        Kesim Tarihi
+                                    </label>
+                                    <input v-model="post.order_date" id="post-order-date" type="datetime-local" class="form-control">
+                                    <div class="text-danger mt-1">
+                                        {{ errors.order }}
+                                    </div>
+                                    <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.order">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 <!--                            <div class="col-md-4">-->
 <!--                                <div class="mb-3">-->
 <!--                                    <label for="post-number_of_shares" class="form-label">-->
@@ -159,7 +175,7 @@
                                 <span v-if="isLoading">Processing...</span>
                                 <span v-else>Kaydet</span>
                             </button>
-                            <a class="btn btn-primary" href="/admin/posts">Kurbanlar</a>
+                            <a class="btn btn-primary" href="/admin/posts">Listeye Geri Dön</a>
                         </div>
                         <h6 class="mt-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
@@ -228,6 +244,7 @@ const schema = {
     title: 'required|min:1',
     age: 'required',
     order: 'required',
+    order_date: 'required',
     status: 'required',
     amount: 'required',
     kg: 'required',
@@ -244,6 +261,7 @@ const {value: number_of_shares} = useField('number_of_shares', null, {initialVal
 const {value: amount} = useField('amount', null, {initialValue: ''});
 const {value: kg} = useField('kg', null, {initialValue: ''});
 const {value: order} = useField('order', null, {initialValue: ''});
+const {value: order_date} = useField('order_date', null, {initialValue: ''});
 const {value: content} = useField('content', null, {initialValue: ''});
 const {value: categories} = useField('categories', null, {initialValue: '', label: 'category'});
 const {categoryList, getCategoryList} = useCategories()
@@ -256,6 +274,7 @@ const post = reactive({
     amount,
     kg,
     order,
+    order_date,
     content,
     categories,
     thumbnail: ''

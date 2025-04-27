@@ -7,6 +7,7 @@ export default function usePosts() {
         title: '',
         kg: '',
         order: '',
+        order_date: '',
         status: '',
         number_of_shares: '',
         share_holders_json: '',
@@ -109,7 +110,7 @@ export default function usePosts() {
     const deletePost = async (id) => {
         swal({
             title: 'Emin misiniz?',
-            text: 'You won\'t be able to revert this action!',
+            text: 'Bu işlemi geri alamayacaksınız!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',

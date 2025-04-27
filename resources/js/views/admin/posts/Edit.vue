@@ -91,6 +91,22 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
+                                    <label for="post-order_date" class="form-label">
+                                        Kesim Tarihi
+                                    </label>
+                                    <input v-model="post.order_date" id="post-order_date" type="datetime-local" class="form-control">
+                                    <div class="text-danger mt-1">
+                                        {{ errors.order_date }}
+                                    </div>
+                                    <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.order_date">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
                                     <label for="post-number_of_shares" class="form-label">
                                         Hissedar Sayısı
                                     </label>
@@ -114,6 +130,7 @@
                                         <option value="pending">Satış Bekliyor</option>
                                         <option value="sold">Satışta</option>
                                         <option value="not_ready">Hazır Değil</option>
+                                        <option value="was_cut_off">Kesildi</option>
                                     </select>
                                     <div class="text-danger mt-1">
                                         {{ errors.status }}
@@ -158,7 +175,7 @@
                                 <span v-if="isLoading">Processing...</span>
                                 <span v-else>Kaydet</span>
                             </button>
-                            <a class="btn btn-primary" href="/admin/posts">Kurbanlar</a>
+                            <a class="btn btn-primary" href="/admin/posts">Listeye Geri Dön</a>
 <!--                            <button :disabled="isLoading" class="btn btn-primary">-->
 <!--                                <div v-show="isLoading" class=""></div>-->
 <!--                                <span v-if="isLoading">Processing...</span>-->
@@ -505,6 +522,7 @@ const paymentNewItem = ref({ price: "", date: todayDate(), tax: 0,note: "" });
     const {value: amount} = useField('amount', null, {initialValue: ''});
     const {value: kg} = useField('kg', null, {initialValue: ''});
     const {value: order} = useField('order', null, {initialValue: ''});
+    const {value: order_date} = useField('order_date', null, {initialValue: ''});
     const {value: share_holders_json} = useField('share_holders_json', null, {initialValue: items.value});
     const { value: content } = useField('content', null, { initialValue: '' });
     const { value: categories } = useField('categories', null, { initialValue: '', label: 'category' });
@@ -518,6 +536,7 @@ const paymentNewItem = ref({ price: "", date: todayDate(), tax: 0,note: "" });
         amount,
         kg,
         order,
+        order_date,
         content,
         categories,
         share_holders_json,
@@ -541,6 +560,7 @@ const paymentNewItem = ref({ price: "", date: todayDate(), tax: 0,note: "" });
         post.status = postData.value.status
         post.age = postData.value.age
         post.order = postData.value.order
+        post.order_date = postData.value.order_date
         post.kg = postData.value.kg
         post.amount = postData.value.amount
         post.amount = postData.value.amount

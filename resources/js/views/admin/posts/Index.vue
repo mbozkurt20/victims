@@ -90,6 +90,9 @@
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Kesim Sırası</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Kesim Tarihi</span>
+                                </th>
+                                <th class="px-6 py-3 bg-gray-50 text-left">
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Durum</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
@@ -114,9 +117,7 @@
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Kategori</span>
                                 </th>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Not</span>
-                                </th>
+
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <div class="flex flex-row items-center justify-between cursor-pointer"
                                          @click="updateOrdering('created_at')">
@@ -159,6 +160,11 @@
                                     {{ post.order }}
                                 </td>
                                 <td class="px-6 py-4 text-sm">
+                                    <div>
+                                        {{ formatDate(post.order_date) }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm">
                                     <div class="fw-bold" v-html="statusPreview(post.status)"></div>
                                 </td>
                                 <td class="px-6 py-4 text-sm">
@@ -169,9 +175,7 @@
                                         {{ category.name }}
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-sm">
-                                    <div v-html="post.content.slice(0, 150)"></div>
-                                </td>
+
                                 <td class="px-6 py-4 text-sm">
                                     {{ post.created_at }}
                                 </td>
@@ -217,6 +221,17 @@
         getPosts()
         getCategoryList()
     })
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString.replace(' ', 'T'));
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${day}-${month}-${year} ${hours}:${minutes}`;
+    }
     const updateOrdering = (column) => {
         orderColumn.value = column;
         orderDirection.value = (orderDirection.value === 'asc') ? 'desc' : 'asc';
@@ -291,6 +306,9 @@
         }
         if (status === 'pending'){
             return '<span class="text-warning">Satış Bekliyor</span';
+        }
+        if (status === 'was_cut_off'){
+            return '<span class="text-warning">Kesildi</span';
         }
     }
 </script>

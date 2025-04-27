@@ -29,6 +29,7 @@ class StorePostRequest extends FormRequest
             'status' => 'required',
             'amount' => 'required',
             'order' => 'required',
+            'order_date' => 'required',
             'kg' => 'required',
             'share_holders_json' => 'nullable',
             'content' => 'required',
