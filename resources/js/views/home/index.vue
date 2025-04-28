@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen sm:items-center py-4" style="background-image: url('/images/wp4846734.webp');background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="min-h-screen sm:items-center" style="background-image: url('/images/21.jpg');background-size: cover;  background-position: center;">
         <div class="max-w-4xl sm:px-6 lg:px-8">
             <div class="pt-8 text-white ">
                <h1 class="fw-bold">Eyvan Kurban Hizmetleri</h1>

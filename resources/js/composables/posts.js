@@ -5,14 +5,12 @@ export default function usePosts() {
     const posts = ref({})
     const post = ref({
         title: '',
-        kg: '',
         order: '',
         order_date: '',
         status: '',
         number_of_shares: '',
         share_holders_json: '',
         amount: '',
-        age: '',
         content: '',
         category_id: '',
         thumbnail: ''
@@ -96,7 +94,7 @@ export default function usePosts() {
                // router.push({name: 'posts.index'})
                 swal({
                     icon: 'success',
-                    title: 'Kurban Bilgileri Kaydedildi'
+                    title: 'Bilgiler Güncellendi'
                 })
             })
             .catch(error => {

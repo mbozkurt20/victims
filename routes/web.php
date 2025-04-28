@@ -23,6 +23,7 @@ Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('posts-excel', [PostController::class, 'export'])->name('posts.excel');
+Route::get('victims-posts-excel/{id}', [PostController::class, 'victimExport'])->name('victims.posts.excel');
 Route::view('/{any?}', 'main-view')
     ->name('dashboard')
     ->where('any', '.*');

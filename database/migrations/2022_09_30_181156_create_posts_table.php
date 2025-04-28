@@ -17,9 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('title');
-            $table->float('kg');
             $table->decimal('amount');
-            $table->integer('age')->nullable();
             $table->integer('order')->nullable();
             $table->string('order_date')->nullable();
             $table->integer('number_of_shares'); //hisse hsayısı

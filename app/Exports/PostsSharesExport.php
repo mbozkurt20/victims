@@ -9,6 +9,13 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class PostsSharesExport implements FromCollection, WithHeadings, WithMapping
 {
+    public $id;
+
+    public function __construct($id)
+    {
+        $this->id = $id;
+    }
+
     /**
      * Verileri getirir.
      *
@@ -16,7 +23,8 @@ class PostsSharesExport implements FromCollection, WithHeadings, WithMapping
      */
     public function collection()
     {
-        return Post::select('id', 'share_holders_json')->get();
+        $post = Post::where('id', $this->id)->select('id','order','order_date','amount', 'title', 'share_holders_json')->get();
+        return $post;
     }
 
     /**
@@ -27,10 +35,15 @@ class PostsSharesExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'ID',
-            'full_name',
-            'phone',
-
+            'Küpe No',
+            'Kesim Tarihi',
+            'Kesim Sırası',
+            'Hissedar Sahibi',
+            'Telefon Numaras',
+            'Vekalet Sahibi',
+            'Vekalet Telefon Numaras',
+            'Ödenen Tutar',
+            'Kalan Tutar',
         ];
     }
 
@@ -42,16 +55,34 @@ class PostsSharesExport implements FromCollection, WithHeadings, WithMapping
      */
     public function map($post): array
     {
-        return [
-            $post->id,
-            $post->title,
-            strip_tags($post->content), // HTML etiketlerini kaldırma
-            $post->kg . ' kg', // kg ekleyerek düzenleme
-            number_format($post->amount, 2) . ' ₺', // Parasal format
-            $post->order,
-            $post->age . ' yaş',
-            $post->number_of_shares . ' Kişi',
-            $post->status == 'sold' ? 'Satışta': ($post->status == 'pending' ? 'Satış Bekliyor' : 'Hazır Değil'), // Boolean değeri yazıya çevirme
-        ];
+        $shareholders = json_decode($post->share_holders_json, true);
+        $shareholderData = [];
+
+        foreach ($shareholders as $shareholder) {
+            $shareholderData[] = [
+                'Küpe No' => $post->title,
+                'Kesim Tarihi' => date('d-m-Y H:i', strtotime($post->order_date)),
+                'Kesim Sırası' => $post->order,
+                'Hissedar' => $shareholder['full_name'],
+                'Telefon' => $shareholder['phone'],
+                'Vekalet' => $shareholder['vekalet'],
+                'Vekalet Telefon' => $shareholder['vekalet_phone'],
+                'Ödenen Tutar' => $this->calculateTotalPayment($shareholder['paymentItems'],$post)['odenen'],
+                'Kalan Tutar' => $this->calculateTotalPayment($shareholder['paymentItems'],$post)['kalan'],
+            ];
+        }
+
+        return $shareholderData;
+    }
+
+
+    private function calculateTotalPayment($paymentItems,$post)
+    {
+        $totalPayment = 0;
+        foreach ($paymentItems as $payment) {
+            $totalPayment += (float) $payment['price'];
+        }
+
+        return ['odenen' => number_format($totalPayment, 2) . ' ₺', 'kalan' => number_format($post->amount - $totalPayment, 2) . ' ₺'];
     }
 }

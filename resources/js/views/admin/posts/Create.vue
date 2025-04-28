@@ -6,54 +6,24 @@
                     <div class="card-body">
 
                         <!-- Title -->
-                        <div class="mb-3">
-                            <label for="post-title" class="form-label">
-                                Küpe Numarası / İsim
-                            </label>
-                            <input v-model="post.title" id="post-title" type="text" class="form-control">
-                            <div class="text-danger mt-1">
-                                {{ errors.title }}
-                            </div>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.title">
-                                    {{ message }}
-                                </div>
-                            </div>
-                        </div>
+
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-8">
                                 <div class="mb-3">
                                     <label for="post-title" class="form-label">
-                                       Kilo
+                                        Küpe Numarası / İsim
                                     </label>
-                                    <input v-model="post.kg" id="post-kg" type="number" class="form-control">
+                                    <input v-model="post.title" id="post-title" type="text" class="form-control">
                                     <div class="text-danger mt-1">
-                                        {{ errors.kg }}
+                                        {{ errors.title }}
                                     </div>
                                     <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.kg">
+                                        <div v-for="message in validationErrors?.title">
                                             {{ message }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-age" class="form-label">
-                                        Yaşı
-                                    </label>
-                                    <input v-model="post.age" id="post-age" type="number" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.age }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.age">
-                                            {{ message }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="post-amount" class="form-label">
@@ -242,12 +212,10 @@ defineRule('min', min);
 // Define a validation schema
 const schema = {
     title: 'required|min:1',
-    age: 'required',
     order: 'required',
     order_date: 'required',
     status: 'required',
     amount: 'required',
-    kg: 'required',
     content: 'required|min:5',
     categories: 'required'
 }
@@ -255,11 +223,9 @@ const schema = {
 const {validate, errors} = useForm({validationSchema: schema})
 // Define actual fields for validation
 const {value: title} = useField('title', null, {initialValue: ''});
-const {value: age} = useField('age', null, {initialValue: ''});
 const {value: status} = useField('status', null, {initialValue: ''});
 const {value: number_of_shares} = useField('number_of_shares', null, {initialValue: 0});
 const {value: amount} = useField('amount', null, {initialValue: ''});
-const {value: kg} = useField('kg', null, {initialValue: ''});
 const {value: order} = useField('order', null, {initialValue: ''});
 const {value: order_date} = useField('order_date', null, {initialValue: ''});
 const {value: content} = useField('content', null, {initialValue: ''});
@@ -268,11 +234,9 @@ const {categoryList, getCategoryList} = useCategories()
 const {storePost, validationErrors, isLoading} = usePosts()
 const post = reactive({
     title,
-    age,
     status,
     number_of_shares,
     amount,
-    kg,
     order,
     order_date,
     content,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Exports\PostExport;
 use App\Exports\PostsExport;
+use App\Exports\PostsSharesExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
@@ -16,6 +17,9 @@ class PostController extends Controller
     public function index()
     {
         $orderColumn = request('order_column', 'created_at');
+
+        $result =  $orderColumn;
+
         if (!in_array($orderColumn, ['id', 'title', 'created_at'])) {
             $orderColumn = 'created_at';
         }
@@ -23,35 +27,62 @@ class PostController extends Controller
         if (!in_array($orderDirection, ['asc', 'desc'])) {
             $orderDirection = 'desc';
         }
-        $posts = Post::with('media')
-            ->whereHas('categories', function ($query) {
-                if (request('search_category')) {
-                    $categories = explode(",", request('search_category'));
-                    $query->whereIn('id', $categories);
-                }
-            })
-            ->when(request('search_id'), function ($query) {
-                $query->where('id', request('search_id'));
-            })
-            ->when(request('search_title'), function ($query) {
-                $query->where('title', 'like', '%' . request('search_title') . '%');
-            })
-            ->when(request('search_content'), function ($query) {
-                $query->where('content', 'like', '%' . request('search_content') . '%');
-            })
-            ->when(request('search_global'), function ($query) {
-                $query->where(function ($q) {
-                    $q->where('id', request('search_global'))
-                        ->orWhere('title', 'like', '%' . request('search_global') . '%')
-                        ->orWhere('content', 'like', '%' . request('search_global') . '%');
 
-                });
-            })
-            ->when(!auth()->user()->hasPermissionTo('post-all'), function ($query) {
-                $query->where('user_id', auth()->id());
-            })
-            ->orderBy($orderColumn, $orderDirection)
-            ->paginate(50);
+        if ($result == -1) {
+            // Sadece hisse sayısı 7'den küçük olanlar
+            $posts = Post::with('media')
+                ->whereHas('categories', function ($query) {
+                    if (request('search_category')) {
+                        $categories = explode(",", request('search_category'));
+                        $query->whereIn('id', $categories);
+                    }
+                })
+                ->where('number_of_shares', '<', 7)
+                ->paginate(50);
+        }
+        elseif ($result == -2){
+            $posts = Post::with('media')
+                ->whereHas('categories', function ($query) {
+                    if (request('search_category')) {
+                        $categories = explode(",", request('search_category'));
+                        $query->whereIn('id', $categories);
+                    }
+                })
+                ->where('number_of_shares', 7)
+                ->paginate(50);
+        }
+        else {
+            // Normal sıralama
+            $posts = Post::with('media')
+                ->whereHas('categories', function ($query) {
+                    if (request('search_category')) {
+                        $categories = explode(",", request('search_category'));
+                        $query->whereIn('id', $categories);
+                    }
+                })
+                ->when(request('search_id'), function ($query) {
+                    $query->where('id', request('search_id'));
+                })
+                ->when(request('search_title'), function ($query) {
+                    $query->where('title', 'like', '%' . request('search_title') . '%');
+                })
+                ->when(request('search_content'), function ($query) {
+                    $query->where('content', 'like', '%' . request('search_content') . '%');
+                })
+                ->when(request('search_global'), function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('id', request('search_global'))
+                            ->orWhere('title', 'like', '%' . request('search_global') . '%')
+                            ->orWhere('content', 'like', '%' . request('search_global') . '%');
+                    });
+                })
+                ->when(!auth()->user()->hasPermissionTo('post-all'), function ($query) {
+                    $query->where('user_id', auth()->id());
+                })
+                ->orderBy($orderColumn, $orderDirection)
+                ->paginate(50);
+        }
+
         return PostResource::collection($posts);
     }
 
@@ -142,8 +173,10 @@ class PostController extends Controller
         return Excel::download(new PostsExport, 'Kurbanlar-Listesi.xlsx');
     }
 
-    public function sharesExport()
+    public function victimExport($id)
     {
-        return Excel::download(new PostsExport, 'Kurbanlar-Hissedar-Listesi.xlsx');
+        $postTitle = Post::find($id)->title;
+
+        return Excel::download(new PostsSharesExport($id), $postTitle.' Küpeli Kurban Bilgileri.xlsx');
     }
 }

@@ -19,9 +19,7 @@
                             <thead>
                             <tr>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <input v-model="search_id" type="text"
-                                           class="inline-block mt-1 w-25 form-control"
-                                           placeholder="ID ile ara">
+
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <input v-model="search_title" type="text"
@@ -36,6 +34,11 @@
                                     <input v-model="search_content" type="text"
                                            class="inline-block mt-1 form-control"
                                            placeholder="Nota göre ara">
+                                </th>
+                                <th class="px-6 py-3 bg-gray-50 text-left ">
+                                    <button  @click="updateOrdering(-1)" class="btn btn-outline-danger"> Eksik Hisseli Kurbanlar</button>
+                                    <button  @click="updateOrdering(-2)" class="btn btn-outline-success"> Tamamlanmış Hisseli Kurbanlar</button>
+                                    <button  @click="updateOrdering(-3)" class="btn btn-outline-dark">  Tüm Kurbanlar</button>
                                 </th>
                                 <th class="px-6 py-3 text-start"></th>
                                 <th class="px-6 py-3 text-start"></th>
@@ -80,11 +83,12 @@
                                     </div>
                                 </th>
 
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Ağırlık</span>
-                                </th>
+
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Fiyat</span>
+                                </th>
+                                <th class="px-6 py-3 bg-gray-50 text-left">
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Hisse Fiyatı</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Kesim Sırası</span>
@@ -151,10 +155,10 @@
                                     {{ post.title }}
                                 </td>
                                 <td class="px-6 py-4 text-sm">
-                                    {{ post.kg }} kg
+                                    {{ post.amount }}₺
                                 </td>
                                 <td class="px-6 py-4 text-sm">
-                                    {{ post.amount }}₺
+                                    {{formattedAmount(post.amount) }}₺
                                 </td>
                                 <td class="px-6 py-4 text-sm">
                                     {{ post.order }}
@@ -183,6 +187,8 @@
                                     <router-link v-if="can('post-edit')"
                                                  :to="{ name: 'posts.edit', params: { id: post.id } }" class="badge bg-primary">Düzenle
                                     </router-link>
+                                    <a href="/victims-posts-excel/2"
+                                       class="ms-2 badge bg-success">Excel İndir</a>
                                     <a href="#" v-if="can('post-delete')" @click.prevent="deletePost(post.id)"
                                        class="ms-2 badge bg-danger">Sil</a>
                                 </td>
@@ -222,6 +228,12 @@
         getCategoryList()
     })
 
+    const formattedAmount = (amount) => {
+        return new Intl.NumberFormat('tr-TR', {
+            style: 'currency',
+            currency: 'TRY',
+        }).format(amount / 7);
+    }
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString.replace(' ', 'T'));

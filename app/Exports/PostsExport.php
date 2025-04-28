@@ -16,7 +16,7 @@ class PostsExport implements FromCollection, WithHeadings, WithMapping
      */
     public function collection()
     {
-        return Post::select('id', 'title', 'content', 'kg', 'amount', 'order', 'age', 'number_of_shares', 'status', 'share_holders_json')->get();
+        return Post::select('id', 'title', 'content', 'amount', 'order', 'number_of_shares', 'status', 'share_holders_json')->get();
     }
 
     /**
@@ -30,10 +30,8 @@ class PostsExport implements FromCollection, WithHeadings, WithMapping
             'ID',
             'Başlık',
             'İçerik',
-            'Kilogram',
             'Tutar',
             'Sipariş Sırası',
-            'Yaş',
             'Paylaşım Sayısı',
             'Durum',
             'Hissedarlar', // JSON verisini işleyerek eklenen alan
@@ -54,10 +52,8 @@ class PostsExport implements FromCollection, WithHeadings, WithMapping
             $post->id,
             $post->title,
             strip_tags($post->content), // HTML etiketlerini kaldırma
-            $post->kg . ' kg', // kg ekleyerek düzenleme
             number_format($post->amount, 2) . ' ₺', // Parasal format
             $post->order,
-            $post->age . ' yaş',
             $post->number_of_shares . ' paylaşım',
             $post->status ? 'Aktif' : 'Pasif', // Boolean değeri yazıya çevirme
             $shareholders, // JSON'dan gelen veriyi işleyerek ekleme

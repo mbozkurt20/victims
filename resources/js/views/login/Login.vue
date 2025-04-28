@@ -1,5 +1,5 @@
 <template>
-    <div class=""  style="background-image: url('/images/wp4846734.webp');background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class=""  style="background-image: url('/images/21.jpg');background-size: cover; background-repeat: no-repeat; background-position: center;">
        <div class="container">
            <div class="row justify-content-center align-items-center min-vh-100">
                <div class="col-md-6 col-lg-5">
@@ -11,7 +11,7 @@
                                <div class="mb-3">
                                    <label for="email" class="form-label text-white fw-bold">{{ $t('email') }}</label>
                                    <input v-model="loginForm.email" id="email" type="email" class="form-control" autofocus autocomplete="username">
-                                   <div class="text-danger mt-1" v-if="validationErrors?.email">
+                                   <div class="text-white fw-bold mt-1" v-if="validationErrors?.email">
                                        <div v-for="message in validationErrors.email">{{ message }}</div>
                                    </div>
                                </div>

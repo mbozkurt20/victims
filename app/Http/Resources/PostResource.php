@@ -24,12 +24,10 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'age' => $this->age,
             'order' => $this->order,
             'order_date' => $this->order_date,
             'amount' => $this->amount,
             'status' => $this->status,
-            'kg' => $this->kg,
             'share_holders_json' => json_decode($this->share_holders_json),
             'number_of_shares' => $this->number_of_shares,
             'categories' => $this->categories,
