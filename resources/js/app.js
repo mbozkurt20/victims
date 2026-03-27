@@ -11,6 +11,7 @@ import ability from './services/ability';
 import vSelect from "vue-select";
 import useAuth from './composables/auth';
 import i18n from "./plugins/i18n";
+import { useAuthStore } from './store/auth';
 
 import 'sweetalert2/dist/sweetalert2.min.css';
 import 'vue-select/dist/vue-select.css';
@@ -20,6 +21,10 @@ pinia.use(piniaPluginPersistedstate);
 
 const app = createApp({
     created() {
+        const authStore = useAuthStore()
+        if (authStore.token) {
+            authStore.setToken(authStore.token)
+        }
         useAuth().getUser()
     }
 });

@@ -5,28 +5,22 @@ import {ref} from "vue";
 export const useAuthStore = defineStore('auth', () => {
     const authenticated = ref(false)
     const user = ref({})
+    const token = ref(null)
 
-    const login = (() => {
-        return axios.get('/api/user').then(({data}) => {
-            user.value = data
-            authenticated.value = true
-        }).catch(({res}) => {
-            user.value = {}
-            authenticated.value = false
-        })
-    })
+    const setToken = (t) => {
+        token.value = t
+        if (t) {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + t
+        } else {
+            delete axios.defaults.headers.common['Authorization']
+        }
+    }
 
     const getUser = (() => {
         return axios.get('/api/user').then(({data}) => {
-            if (data.success) {
-                user.value = data.data
-                authenticated.value = true
-                // router.push({name: 'dashboard'})
-            } else {
-                user.value = {}
-                authenticated.value = false
-            }
-        }).catch(({res}) => {
+            user.value = data
+            authenticated.value = true
+        }).catch(() => {
             user.value = {}
             authenticated.value = false
         })
@@ -35,9 +29,10 @@ export const useAuthStore = defineStore('auth', () => {
     const logout = (() => {
         user.value = {}
         authenticated.value = false
+        setToken(null)
     })
 
-    return {authenticated, user, login, getUser, logout}
+    return {authenticated, user, token, setToken, getUser, logout}
 }, {
     persist: true
 })

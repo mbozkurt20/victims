@@ -29,6 +29,13 @@ export default defineConfig({
     // build: {
     //     chunkSizeWarningLimit: 1600,
     // },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                quietDeps: true,
+            },
+        },
+    },
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm-bundler.js',
