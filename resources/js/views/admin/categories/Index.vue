@@ -1,126 +1,84 @@
 <template>
-    <div class="row justify-content-center my-2">
-        <div class="col-md-12">
-            <div class="card border-0">
-                <div class="card-header bg-transparent">
-                    <h5 class="float-start">Kategoriler</h5>
-                    <router-link v-if="can('category-create')" :to="{ name: 'categories.create' }" class="btn btn-primary btn-sm float-end">
-                        Kategori Ekle
-                    </router-link>
+    <div>
+        <div class="page-header mb-4">
+            <div>
+                <h4 class="page-title">Kategoriler</h4>
+                <p class="page-subtitle">Tüm kategorileri görüntüleyin ve yönetin</p>
+            </div>
+            <router-link v-if="can('category-create')" :to="{ name: 'categories.create' }" class="btn btn-primary-orange">
+                + Kategori Ekle
+            </router-link>
+        </div>
+
+        <div class="card admin-card">
+            <div class="card-body p-0">
+                <!-- Arama -->
+                <div class="table-toolbar">
+                    <input v-model="search_global" type="text" placeholder="Ara..." class="form-control search-input">
                 </div>
-                <div class="card-body shadow-sm">
-                    <div class="mb-4">
-                        <input v-model="search_global" type="text" placeholder="Ara..."
-                               class="form-control w-25">
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
+
+                <div class="table-responsive">
+                    <table class="table admin-table mb-0">
+                        <thead>
                             <tr>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <input v-model="search_id" type="text"
-                                           class="inline-block mt-1 form-control"
-                                           placeholder="Id ile ara">
+                                <th @click="updateOrdering('id')" class="sortable">
+                                    ID
+                                    <span class="sort-icon" v-if="orderColumn === 'id'">{{ orderDirection === 'asc' ? '↑' : '↓' }}</span>
                                 </th>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <input v-model="search_title" type="text"
-                                           class="inline-block mt-1 form-control"
-                                           placeholder="Başlık ile ara">
+                                <th @click="updateOrdering('title')" class="sortable">
+                                    Başlık
+                                    <span class="sort-icon" v-if="orderColumn === 'title'">{{ orderDirection === 'asc' ? '↑' : '↓' }}</span>
                                 </th>
-                                <th class="px-6 py-3 text-start"></th>
-                                <th class="px-6 py-3 text-start"></th>
+                                <th @click="updateOrdering('created_at')" class="sortable">
+                                    Oluşturulma Tarihi
+                                    <span class="sort-icon" v-if="orderColumn === 'created_at'">{{ orderDirection === 'asc' ? '↑' : '↓' }}</span>
+                                </th>
+                                <th>İşlemler</th>
                             </tr>
-                            <tr>
-                                <th class="px-6 py-3 text-start">
-                                    <div class="flex flex-row"
-                                         @click="updateOrdering('id')">
-                                        <div class="font-medium text-uppercase"
-                                             :class="{ 'font-bold text-blue-600': orderColumn === 'id' }">
-                                            ID
-                                        </div>
-                                        <div class="select-none">
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'asc' && orderColumn === 'id',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'id',
-                                }">&uarr;</span>
-                                            <span :class="{
-                                  'text-blue-600': orderDirection === 'desc' && orderColumn === 'id',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'id',
-                                }">&darr;</span>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th class="px-6 py-3 text-left">
-                                    <div class="flex flex-row"
-                                         @click="updateOrdering('title')">
-                                        <div class="font-medium text-uppercase"
-                                             :class="{ 'font-bold text-blue-600': orderColumn === 'title' }">
-                                            Başlık
-                                        </div>
-                                        <div class="select-none">
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'asc' && orderColumn === 'title',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'title',
-                                }">&uarr;</span>
-                                            <span :class="{
-                                  'text-blue-600': orderDirection === 'desc' && orderColumn === 'title',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'title',
-                                }">&darr;</span>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <div class="flex flex-row items-center justify-between cursor-pointer"
-                                         @click="updateOrdering('created_at')">
-                                        <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                             :class="{ 'font-bold text-blue-600': orderColumn === 'created_at' }">
-                                            Created at
-                                        </div>
-                                        <div class="select-none">
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'asc' && orderColumn === 'created_at',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'created_at',
-                                }">&uarr;</span>
-                                            <span :class="{
-                                  'text-blue-600': orderDirection === 'desc' && orderColumn === 'created_at',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'created_at',
-                                }">&darr;</span>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th class="px-6 py-3 bg-gray-50 text-left">
-                                    İşlemler
-                                </th>
+                            <tr class="filter-row">
+                                <th><input v-model="search_id" type="text" class="form-control form-control-sm" placeholder="ID ara"></th>
+                                <th><input v-model="search_title" type="text" class="form-control form-control-sm" placeholder="Başlık ara"></th>
+                                <th></th>
+                                <th></th>
                             </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="post in categories.data" :key="post.id">
-                                <td class="px-6 py-4 text-sm">
-                                    {{ post.id }}
-                                </td>
-                                <td class="px-6 py-4 text-sm">
-                                    {{ post.name }}
-                                </td>
-                                <td class="px-6 py-4 text-sm">
-                                    {{ post.created_at }}
-                                </td>
-                                <td class="px-6 py-4 text-sm">
-                                    <router-link v-if="can('category-edit')"
-                                                 :to="{ name: 'categories.edit', params: { id: post.id } }"
-                                                 class="badge bg-primary">Düzenle
-                                    </router-link>
-                                    <a href="#" v-if="can('category-delete')" @click.prevent="deleteCategory(post.id)"
-                                       class="ms-2 badge bg-danger">Sil</a>
+                        </thead>
+                        <tbody>
+                            <tr v-for="category in categories.data" :key="category.id">
+                                <td class="text-muted small fw-semibold">#{{ category.id }}</td>
+                                <td class="fw-semibold">{{ category.name }}</td>
+                                <td class="text-muted small">{{ formatDate(category.created_at) }}</td>
+                                <td>
+                                    <div class="action-btns">
+                                        <router-link
+                                            v-if="can('category-edit')"
+                                            :to="{ name: 'categories.edit', params: { id: category.id } }"
+                                            class="btn btn-sm btn-outline-primary"
+                                        >
+                                            Düzenle
+                                        </router-link>
+                                        <button
+                                            v-if="can('category-delete')"
+                                            @click="deleteCategory(category.id)"
+                                            class="btn btn-sm btn-outline-danger"
+                                        >
+                                            Sil
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                            <tr v-if="!categories.data?.length">
+                                <td colspan="4" class="text-center text-muted py-4">Kayıt bulunamadı</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-footer">
-                    <Pagination :data="categories" :limit="3"
-                                @pagination-change-page="page => getCategories(page, search_id, search_title, search_global, orderColumn, orderDirection)"
-                                class="mt-4"/>
+
+                <div class="p-3 border-top" v-if="categories.data?.length">
+                    <Pagination
+                        :data="categories"
+                        :limit="3"
+                        @pagination-change-page="page => getCategories(page, search_id, search_title, search_global, orderColumn, orderDirection)"
+                    />
                 </div>
             </div>
         </div>
@@ -128,54 +86,157 @@
 </template>
 
 <script setup>
-    import {ref, onMounted, watch} from "vue";
-    import useCategories from "../../../composables/categories";
-    import {useAbility} from '@casl/vue'
+import { ref, onMounted, watch } from 'vue'
+import useCategories from '../../../composables/categories'
+import { useAbility } from '@casl/vue'
 
-    const search_id = ref('')
-    const search_title = ref('')
-    const search_global = ref('')
-    const orderColumn = ref('created_at')
-    const orderDirection = ref('desc')
-    const {categories, getCategories, deleteCategory} = useCategories()
-    const {can} = useAbility()
-    onMounted(() => {
-        getCategories()
-    })
-    const updateOrdering = (column) => {
-        orderColumn.value = column;
-        orderDirection.value = (orderDirection.value === 'asc') ? 'desc' : 'asc';
-        getCategories(
-            1,
-            search_id.value,
-            search_title.value,
-            search_global.value,
-            orderColumn.value,
-            orderDirection.value
-        );
-    }
-    watch(search_id, (current, previous) => {
-        getCategories(
-            1,
-            current,
-            search_title.value,
-            search_global.value
-        )
-    })
-    watch(search_title, (current, previous) => {
-        getCategories(
-            1,
-            search_id.value,
-            current,
-            search_global.value
-        )
-    })
-    watch(search_global, _.debounce((current, previous) => {
-        getCategories(
-            1,
-            search_id.value,
-            search_title.value,
-            current
-        )
-    }, 200))
+const search_id = ref('')
+const search_title = ref('')
+const search_global = ref('')
+const orderColumn = ref('created_at')
+const orderDirection = ref('desc')
+const { categories, getCategories, deleteCategory } = useCategories()
+const { can } = useAbility()
+
+onMounted(() => getCategories())
+
+const formatDate = (dateStr) => {
+    if (!dateStr) return '-'
+    return new Date(dateStr).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
+const updateOrdering = (column) => {
+    orderColumn.value = column
+    orderDirection.value = orderDirection.value === 'asc' ? 'desc' : 'asc'
+    getCategories(1, search_id.value, search_title.value, search_global.value, orderColumn.value, orderDirection.value)
+}
+
+watch(search_id, (val) => getCategories(1, val, search_title.value, search_global.value))
+watch(search_title, (val) => getCategories(1, search_id.value, val, search_global.value))
+watch(search_global, _.debounce((val) => getCategories(1, search_id.value, search_title.value, val), 200))
 </script>
+
+<style scoped>
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-title {
+    font-weight: 700;
+    margin: 0;
+    color: #1a1f2e;
+}
+
+.page-subtitle {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.btn-primary-orange {
+    background: #e38d02;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.btn-primary-orange:hover {
+    background: #c97c02;
+    color: #fff;
+}
+
+.admin-card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+.table-toolbar {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.search-input {
+    max-width: 280px;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.admin-table thead th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6c757d;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+}
+
+.admin-table tbody td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 0.875rem;
+}
+
+.admin-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable:hover {
+    color: #e38d02 !important;
+}
+
+.sort-icon {
+    margin-left: 4px;
+    color: #e38d02;
+}
+
+.filter-row th {
+    background: #fff !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+.action-btns {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-outline-primary {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.4rem;
+    border-color: #e38d02;
+    color: #e38d02;
+}
+
+.btn-outline-primary:hover {
+    background: #e38d02;
+    border-color: #e38d02;
+    color: #fff;
+}
+
+.btn-outline-danger {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.4rem;
+}
+</style>

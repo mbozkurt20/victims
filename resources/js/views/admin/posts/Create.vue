@@ -1,215 +1,127 @@
 <template>
-    <form @submit.prevent="submitForm">
-        <div class="row my-5">
-            <div class="col-md-8">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
+    <div>
+        <div class="page-header mb-4">
+            <div>
+                <h4 class="page-title">Yeni Kurban Ekle</h4>
+                <p class="page-subtitle">Yeni bir kurban kaydı oluşturun</p>
+            </div>
+            <a href="/admin/posts" class="btn btn-outline-secondary btn-sm">← Listeye Dön</a>
+        </div>
 
-                        <!-- Title -->
-
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="mb-3">
-                                    <label for="post-title" class="form-label">
-                                        Küpe Numarası / İsim
-                                    </label>
-                                    <input v-model="post.title" id="post-title" type="text" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.title }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.title">
-                                            {{ message }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-amount" class="form-label">
-                                        Fiyat
-                                    </label>
-                                    <input v-model="post.amount" id="post-amount" type="number" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.amount }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.amount">
-                                            {{ message }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+        <form @submit.prevent="submitForm">
+            <div class="row g-4">
+                <!-- Sol: Kurban Bilgileri -->
+                <div class="col-md-8">
+                    <div class="card admin-card">
+                        <div class="card-header-section">
+                            <h6 class="section-title">Kurban Bilgileri</h6>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-order" class="form-label">
-                                        Kesim Sırası
-                                    </label>
-                                    <input v-model="post.order" id="post-order" type="number" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.order }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.order">
-                                            {{ message }}
-                                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label class="form-label fw-semibold">Küpe Numarası / İsim</label>
+                                    <input v-model="post.title" type="text" class="form-control" placeholder="Küpe numarası veya isim girin">
+                                    <div class="text-danger small mt-1">{{ errors.title }}</div>
+                                    <div class="text-danger small mt-1">
+                                        <div v-for="msg in validationErrors?.title" :key="msg">{{ msg }}</div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-order-date" class="form-label">
-                                        Kesim Tarihi
-                                    </label>
-                                    <input v-model="post.order_date" id="post-order-date" type="datetime-local" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.order }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.order">
-                                            {{ message }}
-                                        </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Fiyat (₺)</label>
+                                    <input v-model="post.amount" type="number" class="form-control" placeholder="0">
+                                    <div class="text-danger small mt-1">{{ errors.amount }}</div>
+                                    <div class="text-danger small mt-1">
+                                        <div v-for="msg in validationErrors?.amount" :key="msg">{{ msg }}</div>
                                     </div>
                                 </div>
-                            </div>
-<!--                            <div class="col-md-4">-->
-<!--                                <div class="mb-3">-->
-<!--                                    <label for="post-number_of_shares" class="form-label">-->
-<!--                                        Hissedar Sayısı-->
-<!--                                    </label>-->
-<!--                                    <input v-model="post.number_of_shares" id="post-number_of_shares" type="number" maxlength="7" class="form-control">-->
-<!--                                    <div class="text-danger mt-1">-->
-<!--                                        {{ errors.number_of_shares }}-->
-<!--                                    </div>-->
-<!--                                    <div class="text-danger mt-1">-->
-<!--                                        <div v-for="message in validationErrors?.number_of_shares">-->
-<!--                                            {{ message }}-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-order" class="form-label">
-                                       Durumu
-                                    </label>
-                                    <select v-model="post.status" class="form-control" name="status" id="">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Kesim Sırası</label>
+                                    <input v-model="post.order" type="number" class="form-control" placeholder="0">
+                                    <div class="text-danger small mt-1">{{ errors.order }}</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Kesim Tarihi</label>
+                                    <input v-model="post.order_date" type="datetime-local" class="form-control">
+                                    <div class="text-danger small mt-1">{{ errors.order_date }}</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Durum</label>
+                                    <select v-model="post.status" class="form-select">
+                                        <option value="">Seçin...</option>
                                         <option value="pending">Satış Bekliyor</option>
                                         <option value="sold">Satışta</option>
                                         <option value="not_ready">Hazır Değil</option>
                                     </select>
-                                    <div class="text-danger mt-1">
-                                        {{ errors.status }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.status">
-                                            {{ message }}
-                                        </div>
-                                    </div>
+                                    <div class="text-danger small mt-1">{{ errors.status }}</div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- Content -->
-                        <div class="mb-3">
-                            <label for="post-content" class="form-label">
-                                Not
-                            </label>
-                            <TextEditorComponent v-model="post.content"/>
-                            <div class="text-danger mt-1">
-                                {{ errors.content }}
-                            </div>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.content">
-                                    {{ message }}
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Not</label>
+                                    <TextEditorComponent v-model="post.content"/>
+                                    <div class="text-danger small mt-1">{{ errors.content }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
-            </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <h6>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-                            </svg> Action
-                        </h6>
-                        <div class="mt-3 text-center">
-                            <button :disabled="isLoading" class="btn btn btn-success me-2">
-                                <div v-show="isLoading" class=""></div>
-                                <span v-if="isLoading">Processing...</span>
-                                <span v-else>Kaydet</span>
+                <!-- Sağ: İşlemler -->
+                <div class="col-md-4">
+                    <div class="card admin-card mb-3">
+                        <div class="card-header-section">
+                            <h6 class="section-title">İşlemler</h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <button :disabled="isLoading" class="btn btn-primary-orange w-100 mb-2">
+                                <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                                {{ isLoading ? 'Kaydediliyor...' : 'Kaydet' }}
                             </button>
-                            <a class="btn btn-primary" href="/admin/posts">Listeye Geri Dön</a>
+                            <a href="/admin/posts" class="btn btn-light w-100">Listeye Dön</a>
                         </div>
-                        <h6 class="mt-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-                            </svg> Category
-                        </h6>
-                        <!-- Category -->
-                        <div class="mb-3">
+                    </div>
+
+                    <div class="card admin-card mb-3">
+                        <div class="card-header-section">
+                            <h6 class="section-title">Küpe (Kategori)</h6>
+                        </div>
+                        <div class="card-body p-4">
                             <v-select multiple v-model="post.categories" :options="categoryList"
-                                      :reduce="category => category.id" label="name" class="form-control" placeholder="Select category"/>
-                            <div class="text-danger mt-1">
-                                {{ errors.categories }}
-                            </div>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.categories">
-                                    {{ message }}
-                                </div>
+                                      :reduce="cat => cat.id" label="name" placeholder="Küpe seçin..."/>
+                            <div class="text-danger small mt-1">{{ errors.categories }}</div>
+                            <div class="text-danger small mt-1">
+                                <div v-for="msg in validationErrors?.categories" :key="msg">{{ msg }}</div>
                             </div>
                         </div>
-<!--                        <div class="mb-3">
-                            <h6 class="mt-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-                                </svg> Thumbnail
-                            </h6>
-                            <input @change="post.thumbnail = $event.target.files[0]" type="file" class="form-control"
-                                   id="thumbnail"/>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.thumbnail">
-                                    {{ message }}
-                                </div>
-                            </div>
-                        </div>-->
-                        <div class="mb-3">
-                            <h6 class="mt-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-                                </svg> Thumbnail
-                            </h6>
+                    </div>
+
+                    <div class="card admin-card">
+                        <div class="card-header-section">
+                            <h6 class="section-title">Fotoğraf</h6>
+                        </div>
+                        <div class="card-body p-4">
                             <DropZone v-model="post.thumbnail"/>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.thumbnail">
-                                    {{ message }}
-                                </div>
+                            <div class="text-danger small mt-1">
+                                <div v-for="msg in validationErrors?.thumbnail" :key="msg">{{ msg }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </template>
+
 <script setup>
-import {onMounted, reactive, ref} from "vue";
-import TextEditorComponent from "@/components/TextEditorComponent.vue";
-import DropZone from "@/components/DropZone.vue";
-import useCategories from "@/composables/categories";
-import usePosts from "@/composables/posts";
-import {useForm, useField, defineRule} from "vee-validate";
-import {required, min} from "@/validation/rules"
+import { onMounted, reactive, ref } from 'vue'
+import TextEditorComponent from '@/components/TextEditorComponent.vue'
+import DropZone from '@/components/DropZone.vue'
+import useCategories from '@/composables/categories'
+import usePosts from '@/composables/posts'
+import { useForm, useField, defineRule } from 'vee-validate'
+import { required, min } from '@/validation/rules'
 
 defineRule('required', required)
-defineRule('min', min);
-// Define a validation schema
+defineRule('min', min)
+
 const schema = {
     title: 'required|min:1',
     order: 'required',
@@ -219,41 +131,69 @@ const schema = {
     content: 'required|min:5',
     categories: 'required'
 }
-// Create a form context with the validation schema
-const {validate, errors} = useForm({validationSchema: schema})
-// Define actual fields for validation
-const {value: title} = useField('title', null, {initialValue: ''});
-const {value: status} = useField('status', null, {initialValue: ''});
-const {value: number_of_shares} = useField('number_of_shares', null, {initialValue: 0});
-const {value: amount} = useField('amount', null, {initialValue: ''});
-const {value: order} = useField('order', null, {initialValue: ''});
-const {value: order_date} = useField('order_date', null, {initialValue: ''});
-const {value: content} = useField('content', null, {initialValue: ''});
-const {value: categories} = useField('categories', null, {initialValue: '', label: 'category'});
-const {categoryList, getCategoryList} = useCategories()
-const {storePost, validationErrors, isLoading} = usePosts()
-const post = reactive({
-    title,
-    status,
-    number_of_shares,
-    amount,
-    order,
-    order_date,
-    content,
-    categories,
-    thumbnail: ''
-})
 
-const thefile = ref('')
+const { validate, errors } = useForm({ validationSchema: schema })
+const { value: title } = useField('title', null, { initialValue: '' })
+const { value: status } = useField('status', null, { initialValue: '' })
+const { value: number_of_shares } = useField('number_of_shares', null, { initialValue: 0 })
+const { value: amount } = useField('amount', null, { initialValue: '' })
+const { value: order } = useField('order', null, { initialValue: '' })
+const { value: order_date } = useField('order_date', null, { initialValue: '' })
+const { value: content } = useField('content', null, { initialValue: '' })
+const { value: categories } = useField('categories', null, { initialValue: '', label: 'category' })
+const { categoryList, getCategoryList } = useCategories()
+const { storePost, validationErrors, isLoading } = usePosts()
+
+const post = reactive({
+    title, status, number_of_shares, amount, order, order_date, content, categories, thumbnail: ''
+})
 
 function submitForm() {
-    validate().then(form => {
-        if (form.valid) storePost(post)
-    })
+    validate().then(form => { if (form.valid) storePost(post) })
 }
 
-onMounted(() => {
-    getCategoryList()
-})
-
+onMounted(() => getCategoryList())
 </script>
+
+<style scoped>
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.page-title { font-weight: 700; margin: 0; color: #1a1f2e; }
+.page-subtitle { color: #6c757d; font-size: 0.875rem; margin: 0; }
+
+.admin-card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    overflow: hidden;
+}
+
+.card-header-section {
+    padding: 0.85rem 1.25rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.section-title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #495057;
+}
+
+.btn-primary-orange {
+    background: #e38d02;
+    color: #fff;
+    border: none;
+    padding: 0.55rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background 0.15s;
+}
+.btn-primary-orange:hover:not(:disabled) { background: #c97c02; color: #fff; }
+.btn-primary-orange:disabled { opacity: 0.65; }
+</style>

@@ -1,503 +1,292 @@
 <template>
-    <form @submit.prevent="submitForm">
-        <div class="row my-5">
-            <h3 class="card card-body m-lg-2">Kurban Bilgileri</h3>
+    <div>
+        <div class="page-header mb-4">
+            <div>
+                <h4 class="page-title">Kurban Düzenle</h4>
+                <p class="page-subtitle">Kurban bilgilerini ve hissedar kayıtlarını yönetin</p>
+            </div>
+            <a href="/admin/posts" class="btn btn-outline-secondary btn-sm">← Listeye Dön</a>
+        </div>
 
-            <div class="col-md-8">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <!-- Title -->
-
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="mb-3">
-                                    <label for="post-title" class="form-label">
-                                        Küpe Numarası / İsim
-                                    </label>
-                                    <input v-model="post.title" id="post-title" type="text" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.title }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.title">
-                                            {{ message }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-amount" class="form-label">
-                                        Fiyat
-                                    </label>
-                                    <input v-model="post.amount" id="post-amount" type="number" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.amount }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.amount">
-                                            {{ message }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+        <!-- Kurban Bilgileri Formu -->
+        <form @submit.prevent="submitForm">
+            <div class="row g-4 mb-4">
+                <div class="col-md-8">
+                    <div class="card admin-card">
+                        <div class="card-header-section">
+                            <h6 class="section-title">Kurban Bilgileri</h6>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-order" class="form-label">
-                                        Kesim Sırası
-                                    </label>
-                                    <input v-model="post.order" id="post-order" type="number" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.order }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.order">
-                                            {{ message }}
-                                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label class="form-label fw-semibold">Küpe Numarası / İsim</label>
+                                    <input v-model="post.title" type="text" class="form-control" placeholder="Küpe numarası veya isim">
+                                    <div class="text-danger small mt-1">{{ errors.title }}</div>
+                                    <div class="text-danger small mt-1">
+                                        <div v-for="msg in validationErrors?.title" :key="msg">{{ msg }}</div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-order_date" class="form-label">
-                                        Kesim Tarihi
-                                    </label>
-                                    <input v-model="post.order_date" id="post-order_date" type="datetime-local"
-                                           class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.order_date }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.order_date">
-                                            {{ message }}
-                                        </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Fiyat (₺)</label>
+                                    <input v-model="post.amount" type="number" class="form-control">
+                                    <div class="text-danger small mt-1">{{ errors.amount }}</div>
+                                    <div class="text-danger small mt-1">
+                                        <div v-for="msg in validationErrors?.amount" :key="msg">{{ msg }}</div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-number_of_shares" class="form-label">
-                                        Hissedar Sayısı
-                                    </label>
-                                    <input disabled v-model="post.number_of_shares" id="post-number_of_shares"
-                                           type="number" class="form-control">
-                                    <div class="text-danger mt-1">
-                                        {{ errors.number_of_shares }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.number_of_shares">
-                                            {{ message }}
-                                        </div>
-                                    </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Kesim Sırası</label>
+                                    <input v-model="post.order" type="number" class="form-control">
+                                    <div class="text-danger small mt-1">{{ errors.order }}</div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="post-order" class="form-label">
-                                        Durumu
-                                    </label>
-                                    <select v-model="post.status" class="form-control" name="status" id="">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Kesim Tarihi</label>
+                                    <input v-model="post.order_date" type="datetime-local" class="form-control">
+                                    <div class="text-danger small mt-1">{{ errors.order_date }}</div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label fw-semibold">Hissedar Sayısı</label>
+                                    <input disabled v-model="post.number_of_shares" type="number" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label fw-semibold">Durum</label>
+                                    <select v-model="post.status" class="form-select">
                                         <option value="pending">Satış Bekliyor</option>
                                         <option value="sold">Satışta</option>
                                         <option value="not_ready">Hazır Değil</option>
                                         <option value="was_cut_off">Kesildi</option>
                                     </select>
-                                    <div class="text-danger mt-1">
-                                        {{ errors.status }}
-                                    </div>
-                                    <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.status">
-                                            {{ message }}
-                                        </div>
-                                    </div>
+                                    <div class="text-danger small mt-1">{{ errors.status }}</div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- Content -->
-                        <div class="mb-3">
-                            <label for="post-content" class="form-label">
-                                Content
-                            </label>
-                            <TextEditorComponent v-model="post.content"/>
-                            <div class="text-danger mt-1">
-                                {{ errors.content }}
-                            </div>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.content">
-                                    {{ message }}
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Not</label>
+                                    <TextEditorComponent v-model="post.content"/>
+                                    <div class="text-danger small mt-1">{{ errors.content }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <h6>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-arrow-down-square" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                      d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-                            </svg>
-                            Action
-                        </h6>
-                        <div class="mt-3 text-center">
-                            <button :disabled="isLoading" class="btn btn btn-success me-2">
-                                <div v-show="isLoading" class=""></div>
-                                <span v-if="isLoading">Processing...</span>
-                                <span v-else>Kaydet</span>
+
+                <div class="col-md-4">
+                    <div class="card admin-card mb-3">
+                        <div class="card-header-section">
+                            <h6 class="section-title">İşlemler</h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <button :disabled="isLoading" class="btn btn-primary-orange w-100 mb-2">
+                                <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                                {{ isLoading ? 'Kaydediliyor...' : 'Kaydet' }}
                             </button>
-                            <a class="btn btn-primary" href="/admin/posts">Listeye Geri Dön</a>
-                            <!--                            <button :disabled="isLoading" class="btn btn-primary">-->
-                            <!--                                <div v-show="isLoading" class=""></div>-->
-                            <!--                                <span v-if="isLoading">Processing...</span>-->
-                            <!--                                <span v-else>Publish</span>-->
-                            <!--                            </button>-->
+                            <a href="/admin/posts" class="btn btn-light w-100">Listeye Dön</a>
                         </div>
-                        <h6 class="mt-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-arrow-down-square" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                      d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-                            </svg>
-                            Category
-                        </h6>
-                        <!-- Category -->
-                        <div class="mb-3">
+                    </div>
+
+                    <div class="card admin-card mb-3">
+                        <div class="card-header-section">
+                            <h6 class="section-title">Küpe (Kategori)</h6>
+                        </div>
+                        <div class="card-body p-4">
                             <v-select multiple v-model="post.categories" :options="categoryList"
-                                      :reduce="category => category.id" label="name" class="form-control"
-                                      placeholder="Select category"/>
-                            <div class="text-danger mt-1">
-                                {{ errors.categories }}
-                            </div>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.categories">
-                                    {{ message }}
-                                </div>
+                                      :reduce="cat => cat.id" label="name" placeholder="Küpe seçin..."/>
+                            <div class="text-danger small mt-1">{{ errors.categories }}</div>
+                            <div class="text-danger small mt-1">
+                                <div v-for="msg in validationErrors?.categories" :key="msg">{{ msg }}</div>
                             </div>
                         </div>
-                        <!--                        <div class="mb-3">
-                                                    <h6 class="mt-3">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
-                                                            <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-                                                        </svg> Thumbnail
-                                                    </h6>
-                                                    <input @change="post.thumbnail = $event.target.files[0]" type="file" class="form-control"
-                                                           id="thumbnail"/>
-                                                    <div class="text-danger mt-1">
-                                                        <div v-for="message in validationErrors?.thumbnail">
-                                                            {{ message }}
-                                                        </div>
-                                                    </div>
-                                                </div>-->
-                        <div class="mb-3">
-                            <h6 class="mt-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-arrow-down-square" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                          d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-                                </svg>
-                                Thumbnail
-                            </h6>
+                    </div>
+
+                    <div class="card admin-card">
+                        <div class="card-header-section">
+                            <h6 class="section-title">Fotoğraf</h6>
+                        </div>
+                        <div class="card-body p-4">
                             <DropZone v-model="post.thumbnail"/>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.thumbnail">
-                                    {{ message }}
+                            <div class="text-danger small mt-1">
+                                <div v-for="msg in validationErrors?.thumbnail" :key="msg">{{ msg }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Hissedar Bilgileri -->
+        <div class="row g-4">
+            <div class="col-md-8">
+                <div class="card admin-card">
+                    <div class="card-header-section d-flex justify-content-between align-items-center">
+                        <h6 class="section-title">Hissedar Listesi</h6>
+                        <span class="badge-count">{{ items.length }} / 7 Hissedar</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <div v-if="!items.length" class="empty-state">
+                            <p class="text-muted text-center mb-0">Henüz hissedar eklenmemiş.</p>
+                        </div>
+
+                        <div v-for="(item, index) in items" :key="index" class="hissedar-card mb-4">
+                            <div class="hissedar-header">
+                                <span class="hissedar-num">{{ index + 1 }}. Hissedar</span>
+                                <button type="button" class="btn btn-sm btn-outline-danger" @click="removeItem(index)">Sil</button>
+                            </div>
+
+                            <div class="hissedar-body">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold small">İsim Soyisim</label>
+                                        <input v-model="item.full_name" type="text" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold small">Telefon</label>
+                                        <input v-model="item.phone" type="text" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold small">Taksit Sayısı</label>
+                                        <input v-model="item.tax" type="number" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold small">Vekalet İsim Soyisim</label>
+                                        <input v-model="item.vekalet" type="text" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold small">Vekalet Telefon</label>
+                                        <input v-model="item.vekalet_phone" type="text" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="payment-summary">
+                                            <div class="pay-item text-success">
+                                                <span class="pay-label">Ödenen</span>
+                                                <span class="pay-val">{{ formattedAmountt(totalPaid(item)) }}</span>
+                                            </div>
+                                            <div class="pay-item text-danger">
+                                                <span class="pay-label">Kalan</span>
+                                                <span class="pay-val">{{ formattedAmountt(post.amount - totalPaid(item)) }}</span>
+                                            </div>
+                                            <div class="pay-item text-secondary">
+                                                <span class="pay-label">İşlem</span>
+                                                <span class="pay-val">{{ item.paymentItems.length }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ödeme Ekle -->
+                                <div class="payment-add-section mt-3">
+                                    <h6 class="sub-section-title">Ödeme Hareketi Ekle</h6>
+                                    <div class="row g-2">
+                                        <div class="col-md-3">
+                                            <label class="form-label small">Ödenen Ücret</label>
+                                            <input type="text" class="form-control form-control-sm" v-model="paymentNewItem.price">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label small">Ödeme Tarihi</label>
+                                            <input type="datetime-local" class="form-control form-control-sm" v-model="paymentNewItem.date">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label small">Taksit No</label>
+                                            <input type="number" class="form-control form-control-sm" v-model="paymentNewItem.tax">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small">Ödeme Şekli</label>
+                                            <select class="form-select form-select-sm" v-model="paymentNewItem.payment_type">
+                                                <option value="">Seçin...</option>
+                                                <option value="Nakit Elden Alınan">Nakit Elden Alınan</option>
+                                                <option value="Nakit Eft">Nakit EFT</option>
+                                                <option value="Kredi Kartı">Kredi Kartı</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label small">Not</label>
+                                            <textarea class="form-control form-control-sm" rows="2" v-model="paymentNewItem.note"></textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="button" class="btn btn-sm btn-outline-success" @click="paymentAddItem(index)">
+                                                + Ödeme Ekle
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ödeme Geçmişi -->
+                                <div v-if="item.paymentItems.length" class="payment-history mt-3">
+                                    <h6 class="sub-section-title">Ödeme Geçmişi</h6>
+                                    <div v-for="(pItem, i) in item.paymentItems" :key="i" class="payment-row">
+                                        <div class="row g-2 align-items-end">
+                                            <div class="col-md-3">
+                                                <label class="form-label small">Ödenen Ücret</label>
+                                                <input type="text" class="form-control form-control-sm" v-model="pItem.price">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label small">Ödeme Tarihi</label>
+                                                <input type="datetime-local" class="form-control form-control-sm" v-model="pItem.date">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label small">Taksit No</label>
+                                                <input type="number" class="form-control form-control-sm" v-model="pItem.tax">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label small">Ödeme Şekli</label>
+                                                <select class="form-select form-select-sm" v-model="pItem.payment_type">
+                                                    <option value="Nakit Elden Alınan">Nakit Elden Alınan</option>
+                                                    <option value="Nakit Eft">Nakit EFT</option>
+                                                    <option value="Kredi Kartı">Kredi Kartı</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1 text-end">
+                                                <button type="button" class="btn btn-sm btn-outline-danger" @click="paymentRemoveItem(index, i)">Sil</button>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small">Not</label>
+                                                <textarea class="form-control form-control-sm" rows="1" v-model="pItem.note"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
 
-    <div class="row mt-3 mb-3">
-        <h3 class="card card-body m-lg-2">Hissedar Bilgileri</h3>
-        <div class="col-md-8">
-            <div class="">
-
-                <div class="card card-body" v-if="items&& !items.length">
-                    <p class="mx-auto text-center">Ekli Hissedar Bulunmamaktadir.</p>
-                </div>
-                <div v-else class="card card-body rounded-4 p-3 mb-3" v-for="(item, index) in items" :key="index">
-                    <h5 class="bg-primary-subtle text-primary rounded-2 mb-4 py-2 px-3 fw-bold">
-                        {{ index + 1 }}.Hissedar Bilgileri</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="post-age" class="form-label">
-                                    İsim Soyisim
-                                </label>
-                                <input v-model="item.full_name" id="post-age" type="text" class="form-control">
-                                <div class="text-danger mt-1">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="post-age" class="form-label">
-                                    Telefon
-                                </label>
-                                <input v-model="item.phone" id="post-age" type="text" class="form-control">
-                                <div class="text-danger mt-1">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="post-age" class="form-label">
-                                    Vekalet İsim Soyisim
-                                </label>
-                                <input v-model="item.vekalet" id="post-age" type="text" class="form-control">
-                                <div class="text-danger mt-1">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="post-age" class="form-label">
-                                    Vekalet Telefon
-                                </label>
-                                <input v-model="item.vekalet_phone" id="post-age" type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="post-age" class="form-label">
-                                    Taksit Sayısı
-                                </label>
-                                <input class="form-control" type="number" v-model="item.tax">
-                                <div class="text-danger mt-1">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                           <div class="row mt-3">
-                               <div class="col-md-4">
-                                   <div class="mb-3 ">
-                                       <label for="post-age" class="form-label text-success fw-bold">
-                                            Ödenen Tutar
-                                       </label>
-                                       <span class="fw-bold"> {{formattedAmountt(item.paymentItems.reduce((sum, currentItem) => {
-                                           return sum + (parseFloat(currentItem.price) || 0);  // price'ı sayıya dönüştürüp toplar
-                                       }, 0))}} ₺</span>
-                                   </div>
-                               </div>
-                               <div class="col-md-4">
-                                   <div class="mb-3">
-                                       <label for="post-age" class="form-label text-danger fw-bold">
-                                           Kalan Tutar
-                                       </label>
-
-                                       <span class="fw-bold">
-                                             {{formattedAmountt(post.amount - item.paymentItems.reduce((sum, currentItem) => {
-                                           return sum + (parseFloat(currentItem.price) || 0);  // price'ı sayıya dönüştürüp toplar
-                                       }, 0))}} ₺
-                                       </span>
-                                   </div>
-                               </div>
-                               <div class="col-md-4">
-                                   <div class="mb-3">
-                                       <label for="post-age" class="form-label text-warning fw-bold">
-                                           İşlem Hareketi
-                                       </label>
-
-                                       <p class="fw-bold block"> {{item.paymentItems.length}} Ödeme</p>
-                                   </div>
-                               </div>
-
-                           </div>
-                        </div>
-                        <div class="row">
-                            <div class="float-end">
-                                <button class="btn btn-outline-danger" @click="removeItem(index)">Sil</button>
-                            </div>
-                        </div>
-                        <hr class="mt-3">
-
-                        <div class="row mt-3">
-                            <h4>İşlem Hareketi Ekle</h4>
-                            <div class="col-md-9 gap-4 mt-3 py-2">
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-                                        <div class="">
-                                            <label for="">Ödenen Ücret</label>
-                                            <input type="text" class="form-control" v-model="paymentNewItem.price">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="">
-                                            <label for="">Ödeme Tarih</label>
-                                            <input value="" type="datetime-local" class="form-control"
-                                                   v-model="paymentNewItem.date">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="">
-                                            <label for="">Ödenen Taksit</label>
-                                            <input type="number" class="form-control" v-model="paymentNewItem.tax">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="post-age" class="form-label">
-                                                Ödeme Şekli
-                                            </label>
-                                            <select class="form-control" v-model="paymentNewItem.payment_type" name=""
-                                                    id="">
-                                                <option value="Nakit Elden Alınan">Nakit Elden Alınan</option>
-                                                <option value="Nakit Eft">Nakit Eft</option>
-                                                <option value="Kredi Kartı">Kredi Kartı</option>
-                                            </select>
-                                            <div class="text-danger mt-1">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="mt-3">
-                                    <label for="">Not</label>
-                                    <textarea class="form-control" v-model="paymentNewItem.note"></textarea>
-                                </div>
-
-                                <div class="col-md-3 mt-3">
-                                    <button class="btn btn-outline-success" @click="paymentAddItem(index)">Hareket
-                                        Ekle
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-5">
-                            <h4>İşlem Hareketleri</h4>
-                            <div v-if="!item.paymentItems.length">
-                                <p class="text-center">İşlem Hareketleri Bulunmuyor...</p>
-                            </div>
-                            <div class="border-top border-secondary-subtle p-3 mb-3"
-                                 v-for="(pItem,i) in item.paymentItems">
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-                                        <div class="">
-                                            <label for="">Ödenen Ücret</label>
-                                            <input type="text" class="form-control" v-model="pItem.price">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="">
-                                            <label for="">Ödeme Tarih</label>
-                                            <input type="datetime-local" class="form-control" v-model="pItem.date">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="">
-                                            <label for="">Ödenen Taksit</label>
-                                            <input type="number" class="form-control" v-model="pItem.tax">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="post-age" class="form-label">
-                                                Ödeme Şekli
-                                            </label>
-                                            <select class="form-control" v-model="pItem.payment_type" name="" id="">
-                                                <option value="Nakit Elden Alınan">Nakit Elden Alınan</option>
-                                                <option value="Nakit Eft">Nakit Eft</option>
-                                                <option value="Kredi Kartı">Kredi Kartı</option>
-                                            </select>
-                                            <div class="text-danger mt-1">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mt-3">
-                                    <label for="">Not</label>
-                                    <textarea class="form-control" v-model="pItem.note"></textarea>
-                                </div>
-
-                                <div class="mt-3 float-end">
-                                    <button class="btn btn-outline-danger" @click="paymentRemoveItem(index,i)">Sil
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Hissedar Ekle -->
+            <div class="col-md-4">
+                <div class="card admin-card" style="position: sticky; top: 80px;">
+                    <div class="card-header-section">
+                        <h6 class="section-title">Hissedar Ekle</h6>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card card-body">
-                <h4 class="mb-1">Hissedar Ekle</h4>
-                <p class="mb-4 text-primary">Ödenecek taksit sayısının karışıklık olmaması için lütfen belirtiniz. </p>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="post-age" class="form-label">
-                                İsim Soyisim
-                            </label>
-                            <input v-model="newItem.full_name" id="post-age" type="text" class="form-control">
-                            <div class="text-danger mt-1">
-
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="post-age" class="form-label">
-                                Vekalet İsim Soyisim
-                            </label>
-                            <input v-model="newItem.vekalet" id="post-age" type="text" class="form-control">
-                            <div class="text-danger mt-1">
-
-                            </div>
-
-                            <div class="mt-4">
-                                <h5 class="fw-bold text-gray-300">Kurban Hisse Fiyatı</h5>
-                                <h4> {{formattedAmount(post.amount) }}₺</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="post-age" class="form-label">
-                                Telefon
-                            </label>
-                            <input v-model="newItem.phone" id="post-age" type="text" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label for="post-age" class="form-label">
-                                Vekalet Telefon
-                            </label>
-                            <input v-model="newItem.vekalet_phone" id="post-age" type="text" class="form-control">
-                            <div class="text-danger mt-1">
-
-                            </div>
+                    <div class="card-body p-4">
+                        <div class="price-badge mb-4">
+                            <span class="price-label">Hisse Fiyatı</span>
+                            <span class="price-value">{{ formattedAmount(post.amount) }}</span>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="post-age" class="form-label">
-                                Taksit Sayısı
-                            </label>
-                            <input class="form-control" v-model="newItem.tax" type="number">
-                            <div class="text-danger mt-1">
-
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold small">İsim Soyisim *</label>
+                                <input v-model="newItem.full_name" type="text" class="form-control form-control-sm">
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <button @click="addItem" class="btn btn-success mt-4 py-2 w-50">Hissedar Ekle</button>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold small">Telefon *</label>
+                                <input v-model="newItem.phone" type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold small">Vekalet İsim Soyisim *</label>
+                                <input v-model="newItem.vekalet" type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold small">Vekalet Telefon *</label>
+                                <input v-model="newItem.vekalet_phone" type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold small">Taksit Sayısı</label>
+                                <input v-model="newItem.tax" type="number" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-12">
+                                <button type="button" @click="addItem" class="btn btn-primary-orange w-100">
+                                    + Hissedar Ekle
+                                </button>
+                                <p class="text-muted small mt-2 mb-0">En fazla 7 hissedar eklenebilir.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -505,35 +294,31 @@
         </div>
     </div>
 </template>
+
 <script setup>
-import {inject, onMounted, reactive, ref, watchEffect} from "vue";
-import {useRoute} from "vue-router";
-import useCategories from "@/composables/categories";
-import usePosts from "@/composables/posts";
-import {useForm, useField, defineRule} from "vee-validate";
-import {required, min} from "@/validation/rules"
-import TextEditorComponent from "@/components/TextEditorComponent.vue";
-import DropZone from "@/components/DropZone.vue";
+import { inject, onMounted, reactive, ref, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
+import useCategories from '@/composables/categories'
+import usePosts from '@/composables/posts'
+import { useForm, useField, defineRule } from 'vee-validate'
+import { required, min } from '@/validation/rules'
+import TextEditorComponent from '@/components/TextEditorComponent.vue'
+import DropZone from '@/components/DropZone.vue'
 
 defineRule('required', required)
-defineRule('min', min);
+defineRule('min', min)
 
 const swal = inject('$swal')
+
 const todayDate = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // 01-12
-    const day = String(now.getDate()).padStart(2, '0'); // 01-31
-    const hours = String(now.getHours()).padStart(2, '0'); // 00-23
-    const minutes = String(now.getMinutes()).padStart(2, '0'); // 00-59
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    const now = new Date()
+    return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}T${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`
 }
 
-const items = ref([{af: 'assa'}]);
-const newItem = ref({full_name: "", phone: "", vekalet: "", vekalet_phone: "", tax: 0, paymentItems: []});
+const items = ref([])
+const newItem = ref({ full_name: '', phone: '', vekalet: '', vekalet_phone: '', tax: 0, paymentItems: [] })
+const paymentNewItem = ref({ price: '', date: todayDate(), tax: 0, note: '', payment_type: '' })
 
-const paymentNewItem = ref({price: "", date: todayDate(), tax: 0, note: "", payment_type: ""});
-// Define a validation schema
 const schema = {
     title: 'required|min:1',
     status: 'required',
@@ -541,55 +326,36 @@ const schema = {
     content: 'required|min:5',
     categories: 'required'
 }
-// Create a form context with the validation schema
-const {validate, errors, resetForm} = useForm({validationSchema: schema})
-// Define actual fields for validation
-const {value: title} = useField('title', null, {initialValue: ''});
-const {value: status} = useField('status', null, {initialValue: ''});
-const {value: number_of_shares} = useField('number_of_shares', null, {initialValue: 1});
-const {value: amount} = useField('amount', null, {initialValue: ''});
-const {value: order} = useField('order', null, {initialValue: ''});
-const {value: order_date} = useField('order_date', null, {initialValue: ''});
-const {value: share_holders_json} = useField('share_holders_json', null, {initialValue: items.value});
-const {value: content} = useField('content', null, {initialValue: ''});
-const {value: categories} = useField('categories', null, {initialValue: '', label: 'category'});
-const {categoryList, getCategoryList} = useCategories()
-const {post: postData, getPost, updatePost, validationErrors, isLoading} = usePosts()
+
+const { validate, errors, resetForm } = useForm({ validationSchema: schema })
+const { value: title } = useField('title', null, { initialValue: '' })
+const { value: status } = useField('status', null, { initialValue: '' })
+const { value: number_of_shares } = useField('number_of_shares', null, { initialValue: 1 })
+const { value: amount } = useField('amount', null, { initialValue: '' })
+const { value: order } = useField('order', null, { initialValue: '' })
+const { value: order_date } = useField('order_date', null, { initialValue: '' })
+const { value: share_holders_json } = useField('share_holders_json', null, { initialValue: items.value })
+const { value: content } = useField('content', null, { initialValue: '' })
+const { value: categories } = useField('categories', null, { initialValue: '', label: 'category' })
+const { categoryList, getCategoryList } = useCategories()
+const { post: postData, getPost, updatePost, validationErrors, isLoading } = usePosts()
+
 const post = reactive({
-    title,
-    status,
-    number_of_shares,
-    amount,
-    order,
-    order_date,
-    content,
-    categories,
-    share_holders_json,
-    thumbnail: ''
+    title, status, number_of_shares, amount, order, order_date, content, categories, share_holders_json, thumbnail: ''
 })
-const route = useRoute();
 
-const formattedAmountt = (amount) => {
-    return new Intl.NumberFormat('tr-TR', {
-        style: 'currency',
-        currency: 'TRY',
-    }).format(amount);
-}
-const formattedAmount = (amount) => {
-    return new Intl.NumberFormat('tr-TR', {
-        style: 'currency',
-        currency: 'TRY',
-    }).format(amount / 7);
-}
+const route = useRoute()
 
-function submitForm(swal = false) {
-    post.share_holders_json = items.value;
+const totalPaid = (item) => item.paymentItems.reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0)
+
+const formattedAmountt = (val) => new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(val)
+const formattedAmount = (val) => new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(val / 7)
+
+function submitForm() {
+    post.share_holders_json = items.value
     validate().then(form => {
         if (form.valid) updatePost(post).then(() => {
-            swal({
-                icon: 'success',
-                title: 'Kurban Bilgileri Kaydedildi'
-            })
+            swal({ icon: 'success', title: 'Kurban Bilgileri Kaydedildi' })
         })
     })
 }
@@ -606,7 +372,6 @@ watchEffect(() => {
     post.order = postData.value.order
     post.order_date = postData.value.order_date
     post.amount = postData.value.amount
-    post.amount = postData.value.amount
     post.number_of_shares = postData.value.number_of_shares
     post.content = postData.value.content
     post.thumbnail = postData.value.original_image
@@ -617,64 +382,177 @@ watchEffect(() => {
 
 const paymentAddItem = (index) => {
     if (paymentNewItem.value.price && paymentNewItem.value.date) {
-        let paymentItems = items.value[index].paymentItems;
-
-        paymentItems.push({...paymentNewItem.value});
-
-        swal({
-            icon: 'success',
-            title: `${newItem.value.full_name} İşlem Hareketi Eklendi`
-        })
-
-        paymentNewItem.value = {price: "", date: "", tax: 0, note: " "};
-        submitForm();
+        items.value[index].paymentItems.push({ ...paymentNewItem.value })
+        swal({ icon: 'success', title: 'Ödeme Hareketi Eklendi' })
+        paymentNewItem.value = { price: '', date: todayDate(), tax: 0, note: '', payment_type: '' }
+        submitForm()
     } else {
-        swal({
-            icon: 'warning',
-            title: 'Eksik Bilgileri Giriniz!'
-        })
+        swal({ icon: 'warning', title: 'Lütfen zorunlu alanları doldurun!' })
     }
-};
+}
 
 const paymentRemoveItem = (index, i) => {
-    let paymentItems = items.value[index].paymentItems;
-
-    paymentItems.value.splice(i, 1);
-};
+    items.value[index].paymentItems.splice(i, 1)
+    submitForm()
+}
 
 const addItem = () => {
-    if (items.value && items.value.length < 7) {
-        if (newItem.value.full_name && newItem.value.phone && newItem.value.vekalet && newItem.value.vekalet_phone) {
-            items.value.push({...newItem.value});
-
-            swal({
-                icon: 'success',
-                title: `${newItem.value.full_name} Hissedar Olarak Eklendi`
-            })
-
-            newItem.value = {full_name: "", phone: "", vekalet: "", vekalet_phone: "", tax: 0, paymentItems: []};
-            submitForm();
-        } else {
-            swal({
-                icon: 'warning',
-                title: 'Eksik Bilgileri Giriniz!'
-            })
-        }
-    } else {
-        swal({
-            icon: 'warning',
-            title: 'En fazla 7 Hissedar Eklenebilir!'
-        })
+    if (items.value.length >= 7) {
+        swal({ icon: 'warning', title: 'En fazla 7 hissedar eklenebilir!' })
+        return
     }
-};
+    if (newItem.value.full_name && newItem.value.phone && newItem.value.vekalet && newItem.value.vekalet_phone) {
+        items.value.push({ ...newItem.value, paymentItems: [] })
+        swal({ icon: 'success', title: `${newItem.value.full_name} hissedar olarak eklendi` })
+        newItem.value = { full_name: '', phone: '', vekalet: '', vekalet_phone: '', tax: 0, paymentItems: [] }
+        submitForm()
+    } else {
+        swal({ icon: 'warning', title: 'Lütfen zorunlu alanları doldurun!' })
+    }
+}
 
 const removeItem = (index) => {
-    if (confirm('Silmek istediğine emin misin?') === true) {
-        items.value.splice(index, 1);
-
-        submitForm();
+    if (confirm('Bu hissedarı silmek istediğinize emin misiniz?')) {
+        items.value.splice(index, 1)
+        submitForm()
     }
-
-};
-
+}
 </script>
+
+<style scoped>
+.page-header { display: flex; align-items: center; justify-content: space-between; }
+.page-title { font-weight: 700; margin: 0; color: #1a1f2e; }
+.page-subtitle { color: #6c757d; font-size: 0.875rem; margin: 0; }
+
+.admin-card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    overflow: hidden;
+}
+
+.card-header-section {
+    padding: 0.85rem 1.25rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.section-title { margin: 0; font-weight: 600; font-size: 0.875rem; color: #495057; }
+
+.badge-count {
+    font-size: 0.75rem;
+    background: #e38d02;
+    color: #fff;
+    padding: 0.25rem 0.6rem;
+    border-radius: 1rem;
+    font-weight: 600;
+}
+
+.btn-primary-orange {
+    background: #e38d02;
+    color: #fff;
+    border: none;
+    padding: 0.55rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background 0.15s;
+}
+.btn-primary-orange:hover:not(:disabled) { background: #c97c02; color: #fff; }
+.btn-primary-orange:disabled { opacity: 0.65; }
+
+.empty-state {
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+.hissedar-card {
+    border: 1px solid #e9ecef;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.hissedar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: #f0f4ff;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.hissedar-num {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #3b5bdb;
+}
+
+.hissedar-body { padding: 1rem; }
+
+.payment-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    height: 100%;
+    justify-content: center;
+}
+
+.pay-item { display: flex; justify-content: space-between; font-size: 0.8rem; }
+.pay-label { font-weight: 500; }
+.pay-val { font-weight: 700; }
+
+.sub-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6c757d;
+    margin-bottom: 0.75rem;
+}
+
+.payment-add-section {
+    background: #f8fff8;
+    border: 1px dashed #b7e4c7;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+}
+
+.payment-history { }
+
+.payment-row {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #e9ecef;
+}
+
+.price-badge {
+    background: linear-gradient(135deg, #e38d02, #f5a623);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.price-label {
+    display: block;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.price-value {
+    display: block;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+</style>

@@ -101,7 +101,7 @@ export default [
                 name: 'profile.index',
                 path: 'profile',
                 component: () => import('../views/admin/profile/index.vue'),
-                meta: { breadCrumb: 'Profile' }
+                meta: { breadCrumb: 'Profil' }
             },
             {
                 name: 'posts.index',
@@ -143,67 +143,67 @@ export default [
                 name: 'permissions.index',
                 path: 'permissions',
                 component: () => import('../views/admin/permissions/Index.vue'),
-                meta: { breadCrumb: 'Permissions' }
+                meta: { breadCrumb: 'İzinler' }
             },
             {
                 name: 'permissions.create',
                 path: 'permissions/create',
                 component: () => import('../views/admin/permissions/Create.vue'),
-                meta: { breadCrumb: 'Create Permission' }
+                meta: { breadCrumb: 'Yeni İzin Ekle' }
             },
             {
                 name: 'permissions.edit',
                 path: 'permissions/edit/:id',
                 component: () => import('../views/admin/permissions/Edit.vue'),
-                meta: { breadCrumb: 'Permission Edit' }
+                meta: { breadCrumb: 'İzin Düzenle' }
             },
             {
                 name: 'roles.index',
                 path: 'roles',
                 component: () => import('../views/admin/roles/Index.vue'),
-                meta: { breadCrumb: 'Roles' }
+                meta: { breadCrumb: 'Roller' }
             },
             {
                 name: 'roles.create',
                 path: 'roles/create',
                 component: () => import('../views/admin/roles/Create.vue'),
-                meta: { breadCrumb: 'Create Role' }
+                meta: { breadCrumb: 'Yeni Rol Ekle' }
             },
             {
                 name: 'roles.edit',
                 path: 'roles/edit/:id',
                 component: () => import('../views/admin/roles/Edit.vue'),
-                meta: { breadCrumb: 'Role Edit' }
+                meta: { breadCrumb: 'Rol Düzenle' }
             },
             {
                 name: 'users.index',
                 path: 'users',
                 component: () => import('../views/admin/users/Index.vue'),
-                meta: { breadCrumb: 'Users' }
+                meta: { breadCrumb: 'Kullanıcılar' }
             },
             {
                 name: 'users.create',
                 path: 'users/create',
                 component: () => import('../views/admin/users/Create.vue'),
-                meta: { breadCrumb: 'Yeni Ekle' }
+                meta: { breadCrumb: 'Yeni Kullanıcı Ekle' }
             },
             {
                 name: 'users.edit',
                 path: 'users/edit/:id',
                 component: () => import('../views/admin/users/Edit.vue'),
-                meta: { breadCrumb: 'User Edit' }
+                meta: { breadCrumb: 'Kullanıcı Düzenle' }
             },
             {
                 name: 'browser_sessions.index',
                 path: 'browser-sessions',
                 component: () => import('../views/admin/browser-sessions/Index.vue'),
-                meta: { breadCrumb: 'Browser Sessions' }
+                meta: { breadCrumb: 'Tarayıcı Oturumları' }
             },
             {
                 name: 'activity_log.index',
                 path: 'activity-log-logs',
                 component: () => import('../views/admin/activity-log/Index.vue'),
-                meta: { breadCrumb: 'Activity Logs' }
+                meta: { breadCrumb: 'Oturum Hareketleri' }
             },
         ]
     },
