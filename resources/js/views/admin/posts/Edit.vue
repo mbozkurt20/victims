@@ -201,6 +201,10 @@
                             <tr v-if="expandedRow === index" class="sh-expanded-row">
                                 <td colspan="12">
                                     <div class="expanded-content">
+                                        <div class="expanded-close-bar">
+                                            <span class="expanded-close-label">{{ index + 1 }}. Hissedar Ödemeleri</span>
+                                            <button type="button" @click="expandedRow = null" class="expanded-close-btn" title="Kapat">✕</button>
+                                        </div>
                                         <!-- Mevcut Ödemeler -->
                                         <div v-if="item.paymentItems.length" class="payments-grid">
                                             <div v-for="(pItem, i) in item.paymentItems" :key="i" class="payment-edit-card">
@@ -582,6 +586,8 @@ const removeItem = (index) => {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    max-height: 220px;
+    overflow: hidden;
 }
 .field-error { font-size: 0.75rem; color: #e03131; margin-top: 2px; }
 
@@ -601,7 +607,7 @@ const removeItem = (index) => {
     border-bottom: 1px solid #e9ecef;
 }
 .sh-header-left { display: flex; align-items: center; gap: 0.75rem; }
-.sh-title { margin: 0; font-weight: 700; font-size: 0.95rem; color: #1a1f2e; }
+.sh-title { margin: 0; font-weight: 800; font-size: 1rem; color: #1a1f2e; letter-spacing: -0.2px; }
 .sh-badge {
     background: #e38d02;
     color: #fff;
@@ -727,13 +733,13 @@ const removeItem = (index) => {
 .td-actions-cell { text-align: center; white-space: nowrap; }
 .row-btn {
     border: none;
-    border-radius: 0.35rem;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
+    border-radius: 0.4rem;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
     transition: opacity 0.15s;
-    margin: 0 1px;
+    margin: 0 2px;
 }
 .row-btn:hover { opacity: 0.75; }
 .row-btn-blue { background: #dde4f5; color: #3b5bdb; }
@@ -754,6 +760,31 @@ const removeItem = (index) => {
 /* Expanded Row */
 .sh-expanded-row td { padding: 0; background: #f0f4ff; }
 .expanded-content { padding: 1.25rem; }
+.expanded-close-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #dde4f5;
+}
+.expanded-close-label { font-size: 0.85rem; font-weight: 700; color: #3b5bdb; }
+.expanded-close-btn {
+    border: none;
+    background: #e9ecef;
+    border-radius: 0.4rem;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+}
+.expanded-close-btn:hover { background: #ffc9c9; color: #e03131; }
 
 .payments-grid {
     display: flex;

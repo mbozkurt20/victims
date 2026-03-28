@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-md navbar-light shadow-sm" style="background: #e38d02">
+    <nav class="navbar navbar-expand-md navbar-light shadow-sm" style="background: #1a1f2e">
         <div class="container">
             <router-link to="/" class="navbar-brand text-white fw-bold">Eyvan Kurban Hizmetleri</router-link>
             <a class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

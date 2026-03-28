@@ -52,14 +52,14 @@
                                         <router-link
                                             v-if="can('category-edit')"
                                             :to="{ name: 'categories.edit', params: { id: category.id } }"
-                                            class="btn btn-sm btn-outline-primary"
+                                            class="table-btn table-btn-primary"
                                         >
                                             Düzenle
                                         </router-link>
                                         <button
                                             v-if="can('category-delete')"
                                             @click="deleteCategory(category.id)"
-                                            class="btn btn-sm btn-outline-danger"
+                                            class="table-btn table-btn-danger"
                                         >
                                             Sil
                                         </button>
@@ -220,23 +220,19 @@ watch(search_global, _.debounce((val) => getCategories(1, search_id.value, searc
     gap: 6px;
 }
 
-.btn-outline-primary {
-    font-size: 0.8rem;
-    padding: 0.3rem 0.7rem;
+.table-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.85rem;
     border-radius: 0.4rem;
-    border-color: #e38d02;
-    color: #e38d02;
-}
-
-.btn-outline-primary:hover {
-    background: #e38d02;
-    border-color: #e38d02;
-    color: #fff;
-}
-
-.btn-outline-danger {
     font-size: 0.8rem;
-    padding: 0.3rem 0.7rem;
-    border-radius: 0.4rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
 }
+.table-btn:hover { opacity: 0.82; transform: translateY(-1px); }
+.table-btn-primary { background: #3b5bdb; color: #fff; }
+.table-btn-danger  { background: #e03131; color: #fff; }
 </style>

@@ -166,15 +166,11 @@
             <div class="container">
                 <div class="visual-grid">
                     <div class="visual-images">
-                        <div class="vi-main">
-                            <img src="/images/saf.jpg" alt="Kurban hizmetleri" />
-                        </div>
-                        <div class="vi-secondary">
-                            <img src="/images/saf2.jpg" alt="Kurban" />
-                            <div class="vi-badge-card">
+                        <div class="vi-full">
+                            <img src="/images/saf2.jpg" alt="Kurban hizmetleri" loading="lazy" />
+                            <div class="vi-badge-overlay">
                                 <span class="vi-badge-icon">☽</span>
-                                <span class="vi-badge-label">Kurban Bayramı</span>
-                                <span class="vi-badge-year">2025</span>
+                                <span class="vi-badge-label">Kurban Bayramı 2025</span>
                             </div>
                         </div>
                     </div>
@@ -373,10 +369,7 @@ const GeomStar = defineComponent({
     inset: 0;
     background-size: cover;
     background-position: center;
-    transform: scale(1.04);
-    transition: transform 8s ease;
 }
-.hero:hover .hero-bg { transform: scale(1.0); }
 .hero-overlay {
     position: absolute;
     inset: 0;
@@ -782,39 +775,28 @@ const GeomStar = defineComponent({
 @media (max-width: 768px) { .visual-grid { grid-template-columns: 1fr; } }
 
 .visual-images { position: relative; }
-.vi-main img {
+.vi-full { position: relative; border-radius: 1.25rem; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,0.15); }
+.vi-full img {
     width: 100%;
-    height: 380px;
+    height: 480px;
     object-fit: cover;
-    border-radius: 1.25rem;
-    box-shadow: 0 12px 48px rgba(0,0,0,0.15);
+    display: block;
 }
-.vi-secondary {
+.vi-badge-overlay {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 1.25rem;
     display: flex;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
-}
-.vi-secondary img {
-    width: 55%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 0.875rem;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-}
-.vi-badge-card {
-    flex: 1;
-    background: linear-gradient(135deg, #0d2b0d, #1a4a1a);
-    border-radius: 0.875rem;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 1rem;
+    gap: 0.5rem;
+    background: rgba(13, 43, 13, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    backdrop-filter: blur(6px);
+    border-radius: 2rem;
+    padding: 0.45rem 1rem;
 }
-.vi-badge-icon { font-size: 1.75rem; color: #d4af37; }
-.vi-badge-label { font-size: 0.75rem; color: rgba(255,255,255,0.8); font-weight: 600; text-align: center; }
-.vi-badge-year { font-size: 1.1rem; color: #d4af37; font-weight: 900; }
+.vi-badge-icon { font-size: 1.1rem; color: #d4af37; }
+.vi-badge-label { font-size: 0.8rem; color: rgba(255,255,255,0.9); font-weight: 700; }
 
 .visual-text .sec-title { margin-top: 0.5rem; }
 .visual-text p { color: #495057; line-height: 1.75; margin-bottom: 1.25rem; }
