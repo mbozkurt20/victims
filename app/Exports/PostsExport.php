@@ -9,79 +9,50 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class PostsExport implements FromCollection, WithHeadings, WithMapping
 {
-    /**
-     * Verileri getirir.
-     *
-     * @return \Illuminate\Support\Collection
-     */
     public function collection()
     {
-        return Post::select('id', 'title', 'content', 'amount', 'order', 'number_of_shares', 'status', 'share_holders_json')->get();
+        return Post::with('categories')
+            ->select('id', 'title', 'amount', 'order', 'order_date', 'number_of_shares', 'status')
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
-    /**
-     * Sütun başlıklarını belirler.
-     *
-     * @return array
-     */
     public function headings(): array
     {
         return [
             'ID',
-            'Başlık',
-            'İçerik',
-            'Tutar',
-            'Sipariş Sırası',
-            'Paylaşım Sayısı',
+            'Küpe No',
+            'Fiyat',
+            'Hisse Fiyatı',
+            'Kesim Sırası',
+            'Kesim Tarihi',
+            'Hissedar Sayısı',
             'Durum',
-            'Hissedarlar', // JSON verisini işleyerek eklenen alan
+            'Kategori',
         ];
     }
 
-    /**
-     * Her satırı düzenler.
-     *
-     * @param $post
-     * @return array
-     */
     public function map($post): array
     {
-        $shareholders = $this->formatShareholders($post->share_holders_json);
+        $statusMap = [
+            'sold'        => 'Satışta',
+            'pending'     => 'Satış Bekliyor',
+            'not_ready'   => 'Hazır Değil',
+            'was_cut_off' => 'Kesildi',
+        ];
+
+        $categories = $post->categories->pluck('name')->implode(', ');
 
         return [
             $post->id,
             $post->title,
-            strip_tags($post->content), // HTML etiketlerini kaldırma
-            number_format($post->amount, 2) . ' ₺', // Parasal format
-            $post->order,
-            $post->number_of_shares . ' paylaşım',
-            $post->status ? 'Aktif' : 'Pasif', // Boolean değeri yazıya çevirme
-            $shareholders, // JSON'dan gelen veriyi işleyerek ekleme
+            number_format($post->amount, 2, '.', '') . ' TL',
+            number_format($post->amount / 7, 2, '.', '') . ' TL',
+            $post->order ?? '-',
+            $post->order_date ? date('d.m.Y', strtotime($post->order_date)) : '-',
+            $post->number_of_shares . ' Kişi',
+            $statusMap[$post->status] ?? $post->status,
+            $categories ?: '-',
         ];
-    }
-
-    /**
-     * Hissedarlar JSON verisini işler.
-     *
-     * @param string|null $json
-     * @return string
-     */
-    private function formatShareholders(?string $json): string
-    {
-        if (!$json) {
-            return 'Hissedar Yok';
-        }
-
-        $shareholders = json_decode($json, true);
-        if (!$shareholders || !is_array($shareholders)) {
-            return 'Geçersiz Veri';
-        }
-
-        $formatted = array_map(function ($holder) {
-            $paymentType = $holder['payment_type'] ?? (isset($holder['paymentItems'][0]['payment_type']) ? $holder['paymentItems'][0]['payment_type'] : '-');
-            return "{$holder['full_name']} ({$holder['phone']}) - {$paymentType}";
-        }, $shareholders);
-
-        return implode(" | ", $formatted);
     }
 }
