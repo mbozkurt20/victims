@@ -124,11 +124,9 @@ defineRule('min', min)
 
 const schema = {
     title: 'required|min:1',
-    order: 'required',
     order_date: 'required',
     status: 'required',
     amount: 'required',
-    content: 'required|min:5',
     categories: 'required'
 }
 
@@ -137,22 +135,26 @@ const { value: title } = useField('title', null, { initialValue: '' })
 const { value: status } = useField('status', null, { initialValue: '' })
 const { value: number_of_shares } = useField('number_of_shares', null, { initialValue: 0 })
 const { value: amount } = useField('amount', null, { initialValue: '' })
-const { value: order } = useField('order', null, { initialValue: '' })
 const { value: order_date } = useField('order_date', null, { initialValue: '' })
-const { value: content } = useField('content', null, { initialValue: '' })
 const { value: categories } = useField('categories', null, { initialValue: '', label: 'category' })
 const { categoryList, getCategoryList } = useCategories()
 const { storePost, validationErrors, isLoading } = usePosts()
 
 const post = reactive({
-    title, status, number_of_shares, amount, order, order_date, content, categories, thumbnail: ''
+    title, status, number_of_shares, amount, order: '', order_date, content: '', categories, thumbnail: ''
 })
 
 function submitForm() {
     validate().then(form => { if (form.valid) storePost(post) })
 }
 
-onMounted(() => getCategoryList())
+onMounted(async () => {
+    getCategoryList()
+    try {
+        const res = await axios.get('/api/posts/next-order')
+        post.order = res.data.next_order
+    } catch {}
+})
 </script>
 
 <style scoped>

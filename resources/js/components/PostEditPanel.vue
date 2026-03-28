@@ -90,8 +90,8 @@
             <div v-if="showAddForm" class="pep-add-form">
                 <input v-model="newItem.full_name" class="pep-input" placeholder="İsim Soyisim *" />
                 <input v-model="newItem.phone" class="pep-input" placeholder="Telefon *" />
-                <input v-model="newItem.vekalet" class="pep-input" placeholder="Vekalet *" />
-                <input v-model="newItem.vekalet_phone" class="pep-input" placeholder="Vekalet Tel *" />
+                <input v-model="newItem.vekalet" class="pep-input" placeholder="Vekalet" />
+                <input v-model="newItem.vekalet_phone" class="pep-input" placeholder="Vekalet Tel" />
                 <input v-model="newItem.tax" type="number" class="pep-input" placeholder="Taksit" style="max-width:80px" />
                 <button type="button" @click="addItem" class="pep-btn pep-btn-dark">Ekle</button>
                 <button type="button" @click="showAddForm=false" class="pep-btn pep-btn-close">İptal</button>
@@ -323,8 +323,8 @@ const removePayment = (idx, pi) => {
 
 const addItem = () => {
     if (items.value.length >= 7) { swal({ icon: 'warning', title: 'En fazla 7 hissedar!' }); return }
-    if (!newItem.value.full_name || !newItem.value.phone || !newItem.value.vekalet || !newItem.value.vekalet_phone) {
-        swal({ icon: 'warning', title: 'Zorunlu alanları doldurun!' }); return
+    if (!newItem.value.full_name || !newItem.value.phone) {
+        swal({ icon: 'warning', title: 'İsim ve telefon zorunludur!' }); return
     }
     items.value.push({ ...newItem.value, paymentItems: [] })
     newItem.value = { full_name: '', phone: '', vekalet: '', vekalet_phone: '', tax: 0, paymentItems: [] }

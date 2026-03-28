@@ -94,6 +94,10 @@ class PostController extends Controller
         $validatedData['user_id'] = auth()->id();
         $validatedData['number_of_shares'] = 0;
 
+        if (empty($validatedData['order'])) {
+            $validatedData['order'] = (Post::max('order') ?? 0) + 1;
+        }
+
         $post = Post::create($validatedData);
 
         $categories = explode(",", $request->categories);
@@ -105,6 +109,11 @@ class PostController extends Controller
         }
 
         return new PostResource($post);
+    }
+
+    public function nextOrder()
+    {
+        return response()->json(['next_order' => (Post::max('order') ?? 0) + 1]);
     }
 
     public function reorder(\Illuminate\Http\Request $request)

@@ -27,10 +27,10 @@ class StorePostRequest extends FormRequest
             'title' => 'required',
             'status' => 'required',
             'amount' => 'required',
-            'order' => 'required',
+            'order' => 'nullable|integer',
             'order_date' => 'required',
             'share_holders_json' => 'nullable',
-            'content' => 'required',
+            'content' => 'nullable',
             'categories' => 'required'
         ];
     }
