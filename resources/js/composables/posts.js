@@ -108,10 +108,11 @@ export default function usePosts() {
     const deletePost = async (id) => {
         swal({
             title: 'Emin misiniz?',
-            text: 'Bu işlemi geri alamayacaksınız!',
+            text: 'Bu kurban kaydı silinecek. İşlemi geri almak için oturum hareketlerinden "Geri Al" butonunu kullanabilirsiniz.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'İptal',
             confirmButtonColor: '#ef4444',
             timer: 20000,
             timerProgressBar: true,
@@ -125,13 +126,13 @@ export default function usePosts() {
                             router.push({name: 'posts.index'})
                             swal({
                                 icon: 'success',
-                                title: 'Post deleted successfully'
+                                title: 'Kurban başarıyla silindi'
                             })
                         })
                         .catch(error => {
                             swal({
                                 icon: 'error',
-                                title: 'Something went wrong'
+                                title: 'Bir hata oluştu'
                             })
                         })
                 }
