@@ -49,15 +49,16 @@ const { processing, logout } = useAuth()
 <style scoped>
 .admin-navbar {
     height: 56px;
-    background: #e38d02;
+    background: #1a1f2e;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 1.25rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
     position: sticky;
     top: 0;
     z-index: 200;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
 .toggler-btn {

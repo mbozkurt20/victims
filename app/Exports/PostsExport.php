@@ -78,7 +78,8 @@ class PostsExport implements FromCollection, WithHeadings, WithMapping
         }
 
         $formatted = array_map(function ($holder) {
-            return "{$holder['full_name']} ({$holder['phone']}) - {$holder['payment_type']}";
+            $paymentType = $holder['payment_type'] ?? (isset($holder['paymentItems'][0]['payment_type']) ? $holder['paymentItems'][0]['payment_type'] : '-');
+            return "{$holder['full_name']} ({$holder['phone']}) - {$paymentType}";
         }, $shareholders);
 
         return implode(" | ", $formatted);

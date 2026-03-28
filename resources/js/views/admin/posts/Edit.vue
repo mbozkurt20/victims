@@ -1,293 +1,310 @@
 <template>
     <div>
-        <div class="page-header mb-4">
-            <div>
-                <h4 class="page-title">Kurban Düzenle</h4>
-                <p class="page-subtitle">Kurban bilgilerini ve hissedar kayıtlarını yönetin</p>
+        <!-- Üst Bar -->
+        <div class="top-bar mb-3">
+            <div class="top-bar-left">
+                <a href="/admin/posts" class="back-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                    </svg>
+                    Listeye Dön
+                </a>
+                <h5 class="page-title">Kurban Düzenle</h5>
             </div>
-            <a href="/admin/posts" class="btn btn-outline-secondary btn-sm">← Listeye Dön</a>
+            <div class="top-bar-right">
+                <a :href="`/victims-posts-excel/${post.id}`" class="action-btn action-btn-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                    </svg>
+                    Excel İndir
+                </a>
+                <button @click="submitForm" :disabled="isLoading" class="action-btn action-btn-primary">
+                    <span v-if="isLoading" class="spin"></span>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                    </svg>
+                    {{ isLoading ? 'Kaydediliyor...' : 'Kaydet' }}
+                </button>
+            </div>
         </div>
 
-        <!-- Kurban Bilgileri Formu -->
-        <form @submit.prevent="submitForm">
-            <div class="row g-4 mb-4">
-                <div class="col-md-8">
-                    <div class="card admin-card">
-                        <div class="card-header-section">
-                            <h6 class="section-title">Kurban Bilgileri</h6>
-                        </div>
-                        <div class="card-body p-4">
-                            <div class="row g-3">
-                                <div class="col-md-8">
-                                    <label class="form-label fw-semibold">Küpe Numarası / İsim</label>
-                                    <input v-model="post.title" type="text" class="form-control" placeholder="Küpe numarası veya isim">
-                                    <div class="text-danger small mt-1">{{ errors.title }}</div>
-                                    <div class="text-danger small mt-1">
-                                        <div v-for="msg in validationErrors?.title" :key="msg">{{ msg }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-semibold">Fiyat (₺)</label>
-                                    <input v-model="post.amount" type="number" class="form-control">
-                                    <div class="text-danger small mt-1">{{ errors.amount }}</div>
-                                    <div class="text-danger small mt-1">
-                                        <div v-for="msg in validationErrors?.amount" :key="msg">{{ msg }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-semibold">Kesim Sırası</label>
-                                    <input v-model="post.order" type="number" class="form-control">
-                                    <div class="text-danger small mt-1">{{ errors.order }}</div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-semibold">Kesim Tarihi</label>
-                                    <input v-model="post.order_date" type="datetime-local" class="form-control">
-                                    <div class="text-danger small mt-1">{{ errors.order_date }}</div>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label fw-semibold">Hissedar Sayısı</label>
-                                    <input disabled v-model="post.number_of_shares" type="number" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label fw-semibold">Durum</label>
-                                    <select v-model="post.status" class="form-select">
-                                        <option value="pending">Satış Bekliyor</option>
-                                        <option value="sold">Satışta</option>
-                                        <option value="not_ready">Hazır Değil</option>
-                                        <option value="was_cut_off">Kesildi</option>
-                                    </select>
-                                    <div class="text-danger small mt-1">{{ errors.status }}</div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label fw-semibold">Not</label>
-                                    <TextEditorComponent v-model="post.content"/>
-                                    <div class="text-danger small mt-1">{{ errors.content }}</div>
-                                </div>
-                            </div>
-                        </div>
+        <!-- Kurban Bilgi Başlık Tablosu (Excel Görünümü) -->
+        <div class="info-header-card mb-3">
+            <div class="info-header-row">
+                <div class="info-cell info-cell-accent">
+                    <span class="info-label">Küpe No</span>
+                    <input v-model="post.title" class="info-input" placeholder="Küpe / İsim" />
+                    <div class="field-error">{{ errors.title }}</div>
+                </div>
+                <div class="info-cell">
+                    <span class="info-label">KURBAN FİYATI</span>
+                    <div class="info-input-wrap">
+                        <input v-model="post.amount" type="number" class="info-input" placeholder="0" />
+                        <span class="info-unit">₺</span>
                     </div>
                 </div>
-
-                <div class="col-md-4">
-                    <div class="card admin-card mb-3">
-                        <div class="card-header-section">
-                            <h6 class="section-title">İşlemler</h6>
-                        </div>
-                        <div class="card-body p-4">
-                            <button :disabled="isLoading" class="btn btn-primary-orange w-100 mb-2">
-                                <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-                                {{ isLoading ? 'Kaydediliyor...' : 'Kaydet' }}
-                            </button>
-                            <a href="/admin/posts" class="btn btn-light w-100">Listeye Dön</a>
-                        </div>
-                    </div>
-
-                    <div class="card admin-card mb-3">
-                        <div class="card-header-section">
-                            <h6 class="section-title">Küpe (Kategori)</h6>
-                        </div>
-                        <div class="card-body p-4">
-                            <v-select multiple v-model="post.categories" :options="categoryList"
-                                      :reduce="cat => cat.id" label="name" placeholder="Küpe seçin..."/>
-                            <div class="text-danger small mt-1">{{ errors.categories }}</div>
-                            <div class="text-danger small mt-1">
-                                <div v-for="msg in validationErrors?.categories" :key="msg">{{ msg }}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card admin-card">
-                        <div class="card-header-section">
-                            <h6 class="section-title">Fotoğraf</h6>
-                        </div>
-                        <div class="card-body p-4">
-                            <DropZone v-model="post.thumbnail"/>
-                            <div class="text-danger small mt-1">
-                                <div v-for="msg in validationErrors?.thumbnail" :key="msg">{{ msg }}</div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="info-cell info-cell-muted">
+                    <span class="info-label">HİSSE FİYATI</span>
+                    <span class="info-value-computed">{{ formattedAmount(post.amount) }}</span>
+                </div>
+                <div class="info-cell">
+                    <span class="info-label">Kesim Günü</span>
+                    <input v-model="post.order_date" type="datetime-local" class="info-input" />
+                </div>
+                <div class="info-cell">
+                    <span class="info-label">Kesim Sırası</span>
+                    <input v-model="post.order" type="number" class="info-input" placeholder="0" />
+                </div>
+                <div class="info-cell">
+                    <span class="info-label">Durum</span>
+                    <select v-model="post.status" class="info-select">
+                        <option value="pending">Satış Bekliyor</option>
+                        <option value="sold">Satışta</option>
+                        <option value="not_ready">Hazır Değil</option>
+                        <option value="was_cut_off">Kesildi</option>
+                    </select>
+                </div>
+                <div class="info-cell">
+                    <span class="info-label">Kategori</span>
+                    <v-select multiple v-model="post.categories" :options="categoryList"
+                              :reduce="cat => cat.id" label="name" placeholder="Seçin..." class="info-vselect" />
+                </div>
+                <div class="info-cell info-cell-sm">
+                    <span class="info-label">Hissedar</span>
+                    <span class="info-value-computed">{{ items.length }} / 7</span>
                 </div>
             </div>
-        </form>
+            <!-- Not Alanı -->
+            <div class="info-note-row">
+                <span class="info-label">Not</span>
+                <TextEditorComponent v-model="post.content" />
+            </div>
+        </div>
 
-        <!-- Hissedar Bilgileri -->
-        <div class="row g-4">
-            <div class="col-md-8">
-                <div class="card admin-card">
-                    <div class="card-header-section d-flex justify-content-between align-items-center">
-                        <h6 class="section-title">Hissedar Listesi</h6>
-                        <span class="badge-count">{{ items.length }} / 7 Hissedar</span>
+        <!-- Hissedar Tablosu -->
+        <div class="shareholders-card">
+            <div class="shareholders-card-header">
+                <div class="sh-header-left">
+                    <h6 class="sh-title">Hissedar Listesi</h6>
+                    <span class="sh-badge">{{ items.length }} / 7</span>
+                </div>
+                <button v-if="items.length < 7" type="button" @click="showAddForm = !showAddForm" class="add-shareholder-btn">
+                    + Hissedar Ekle
+                </button>
+            </div>
+
+            <!-- Hissedar Ekleme Formu -->
+            <div v-if="showAddForm" class="add-form-row">
+                <div class="add-form-grid">
+                    <div class="add-form-field">
+                        <label>İsim Soyisim *</label>
+                        <input v-model="newItem.full_name" type="text" class="form-input" placeholder="Ad Soyad" />
                     </div>
-                    <div class="card-body p-4">
-                        <div v-if="!items.length" class="empty-state">
-                            <p class="text-muted text-center mb-0">Henüz hissedar eklenmemiş.</p>
-                        </div>
-
-                        <div v-for="(item, index) in items" :key="index" class="hissedar-card mb-4">
-                            <div class="hissedar-header">
-                                <span class="hissedar-num">{{ index + 1 }}. Hissedar</span>
-                                <button type="button" class="btn btn-sm btn-outline-danger" @click="removeItem(index)">Sil</button>
-                            </div>
-
-                            <div class="hissedar-body">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold small">İsim Soyisim</label>
-                                        <input v-model="item.full_name" type="text" class="form-control form-control-sm">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold small">Telefon</label>
-                                        <input v-model="item.phone" type="text" class="form-control form-control-sm">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold small">Taksit Sayısı</label>
-                                        <input v-model="item.tax" type="number" class="form-control form-control-sm">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold small">Vekalet İsim Soyisim</label>
-                                        <input v-model="item.vekalet" type="text" class="form-control form-control-sm">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold small">Vekalet Telefon</label>
-                                        <input v-model="item.vekalet_phone" type="text" class="form-control form-control-sm">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="payment-summary">
-                                            <div class="pay-item text-success">
-                                                <span class="pay-label">Ödenen</span>
-                                                <span class="pay-val">{{ formattedAmountt(totalPaid(item)) }}</span>
-                                            </div>
-                                            <div class="pay-item text-danger">
-                                                <span class="pay-label">Kalan</span>
-                                                <span class="pay-val">{{ formattedAmountt(post.amount - totalPaid(item)) }}</span>
-                                            </div>
-                                            <div class="pay-item text-secondary">
-                                                <span class="pay-label">İşlem</span>
-                                                <span class="pay-val">{{ item.paymentItems.length }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Ödeme Ekle -->
-                                <div class="payment-add-section mt-3">
-                                    <h6 class="sub-section-title">Ödeme Hareketi Ekle</h6>
-                                    <div class="row g-2">
-                                        <div class="col-md-3">
-                                            <label class="form-label small">Ödenen Ücret</label>
-                                            <input type="text" class="form-control form-control-sm" v-model="paymentNewItem.price">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label small">Ödeme Tarihi</label>
-                                            <input type="datetime-local" class="form-control form-control-sm" v-model="paymentNewItem.date">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label small">Taksit No</label>
-                                            <input type="number" class="form-control form-control-sm" v-model="paymentNewItem.tax">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label small">Ödeme Şekli</label>
-                                            <select class="form-select form-select-sm" v-model="paymentNewItem.payment_type">
-                                                <option value="">Seçin...</option>
-                                                <option value="Nakit Elden Alınan">Nakit Elden Alınan</option>
-                                                <option value="Nakit Eft">Nakit EFT</option>
-                                                <option value="Kredi Kartı">Kredi Kartı</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="form-label small">Not</label>
-                                            <textarea class="form-control form-control-sm" rows="2" v-model="paymentNewItem.note"></textarea>
-                                        </div>
-                                        <div class="col-12">
-                                            <button type="button" class="btn btn-sm btn-outline-success" @click="paymentAddItem(index)">
-                                                + Ödeme Ekle
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Ödeme Geçmişi -->
-                                <div v-if="item.paymentItems.length" class="payment-history mt-3">
-                                    <h6 class="sub-section-title">Ödeme Geçmişi</h6>
-                                    <div v-for="(pItem, i) in item.paymentItems" :key="i" class="payment-row">
-                                        <div class="row g-2 align-items-end">
-                                            <div class="col-md-3">
-                                                <label class="form-label small">Ödenen Ücret</label>
-                                                <input type="text" class="form-control form-control-sm" v-model="pItem.price">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label small">Ödeme Tarihi</label>
-                                                <input type="datetime-local" class="form-control form-control-sm" v-model="pItem.date">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label small">Taksit No</label>
-                                                <input type="number" class="form-control form-control-sm" v-model="pItem.tax">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label small">Ödeme Şekli</label>
-                                                <select class="form-select form-select-sm" v-model="pItem.payment_type">
-                                                    <option value="Nakit Elden Alınan">Nakit Elden Alınan</option>
-                                                    <option value="Nakit Eft">Nakit EFT</option>
-                                                    <option value="Kredi Kartı">Kredi Kartı</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-1 text-end">
-                                                <button type="button" class="btn btn-sm btn-outline-danger" @click="paymentRemoveItem(index, i)">Sil</button>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="form-label small">Not</label>
-                                                <textarea class="form-control form-control-sm" rows="1" v-model="pItem.note"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="add-form-field">
+                        <label>Telefon *</label>
+                        <input v-model="newItem.phone" type="text" class="form-input" placeholder="05xx xxx xx xx" />
+                    </div>
+                    <div class="add-form-field">
+                        <label>Vekalet İsim *</label>
+                        <input v-model="newItem.vekalet" type="text" class="form-input" placeholder="Vekalet İsim" />
+                    </div>
+                    <div class="add-form-field">
+                        <label>Vekalet Tel *</label>
+                        <input v-model="newItem.vekalet_phone" type="text" class="form-input" placeholder="05xx xxx xx xx" />
+                    </div>
+                    <div class="add-form-field">
+                        <label>Taksit Sayısı</label>
+                        <input v-model="newItem.tax" type="number" class="form-input" placeholder="0" />
+                    </div>
+                    <div class="add-form-field add-form-actions">
+                        <button type="button" @click="addItem" class="action-btn action-btn-primary">Ekle</button>
+                        <button type="button" @click="showAddForm = false" class="action-btn action-btn-ghost">İptal</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Hissedar Ekle -->
-            <div class="col-md-4">
-                <div class="card admin-card" style="position: sticky; top: 80px;">
-                    <div class="card-header-section">
-                        <h6 class="section-title">Hissedar Ekle</h6>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="price-badge mb-4">
-                            <span class="price-label">Hisse Fiyatı</span>
-                            <span class="price-value">{{ formattedAmount(post.amount) }}</span>
-                        </div>
+            <!-- Tablo -->
+            <div class="table-wrap">
+                <table class="sh-table">
+                    <thead>
+                        <tr class="sh-thead-accent">
+                            <th class="th-no">#</th>
+                            <th>İsim Soyisim</th>
+                            <th>İrtibat No</th>
+                            <th>Vekalet</th>
+                            <th>Vekalet Tel</th>
+                            <th>Taksit</th>
+                            <th class="th-payment">1. Ödeme</th>
+                            <th class="th-payment">2. Ödeme</th>
+                            <th class="th-payment">3. Ödeme</th>
+                            <th class="th-total">TOPLAM</th>
+                            <th class="th-remain">KALAN</th>
+                            <th class="th-actions">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dolu satırlar -->
+                        <template v-for="(item, index) in items" :key="index">
+                            <tr class="sh-row" :class="{ 'sh-row-expanded': expandedRow === index }">
+                                <td class="td-no">{{ index + 1 }}</td>
+                                <td>
+                                    <input v-model="item.full_name" class="td-input" placeholder="İsim Soyisim" />
+                                </td>
+                                <td>
+                                    <input v-model="item.phone" class="td-input" placeholder="Telefon" />
+                                </td>
+                                <td>
+                                    <input v-model="item.vekalet" class="td-input" placeholder="Vekalet İsim" />
+                                </td>
+                                <td>
+                                    <input v-model="item.vekalet_phone" class="td-input" placeholder="Vekalet Tel" />
+                                </td>
+                                <td>
+                                    <input v-model="item.tax" type="number" class="td-input td-input-sm" placeholder="0" />
+                                </td>
+                                <!-- 1. Ödeme -->
+                                <td class="td-payment">
+                                    <div v-if="item.paymentItems[0]" class="payment-cell-filled">
+                                        <span class="pc-amount">{{ formatMini(item.paymentItems[0].price) }}</span>
+                                        <span class="pc-type">{{ item.paymentItems[0].payment_type || '-' }}</span>
+                                    </div>
+                                    <span v-else class="empty-payment">0,00 TL</span>
+                                </td>
+                                <!-- 2. Ödeme -->
+                                <td class="td-payment">
+                                    <div v-if="item.paymentItems[1]" class="payment-cell-filled">
+                                        <span class="pc-amount">{{ formatMini(item.paymentItems[1].price) }}</span>
+                                        <span class="pc-type">{{ item.paymentItems[1].payment_type || '-' }}</span>
+                                    </div>
+                                    <span v-else class="empty-payment">0,00 TL</span>
+                                </td>
+                                <!-- 3. Ödeme -->
+                                <td class="td-payment">
+                                    <div v-if="item.paymentItems[2]" class="payment-cell-filled">
+                                        <span class="pc-amount">{{ formatMini(item.paymentItems[2].price) }}</span>
+                                        <span class="pc-type">{{ item.paymentItems[2].payment_type || '-' }}</span>
+                                    </div>
+                                    <span v-else class="empty-payment">0,00 TL</span>
+                                </td>
+                                <td class="td-total">{{ formattedAmountt(totalPaid(item)) }}</td>
+                                <td class="td-remain" :class="remainClass(item)">{{ formattedAmountt(sharePrice - totalPaid(item)) }}</td>
+                                <td class="td-actions-cell">
+                                    <button type="button" @click="toggleRow(index)" class="row-btn row-btn-blue" :title="expandedRow === index ? 'Kapat' : 'Ödemeler'">
+                                        {{ expandedRow === index ? '▲' : '▼' }}
+                                    </button>
+                                    <button type="button" @click="removeItem(index)" class="row-btn row-btn-red" title="Sil">✕</button>
+                                </td>
+                            </tr>
 
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-semibold small">İsim Soyisim *</label>
-                                <input v-model="newItem.full_name" type="text" class="form-control form-control-sm">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-semibold small">Telefon *</label>
-                                <input v-model="newItem.phone" type="text" class="form-control form-control-sm">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-semibold small">Vekalet İsim Soyisim *</label>
-                                <input v-model="newItem.vekalet" type="text" class="form-control form-control-sm">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-semibold small">Vekalet Telefon *</label>
-                                <input v-model="newItem.vekalet_phone" type="text" class="form-control form-control-sm">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-semibold small">Taksit Sayısı</label>
-                                <input v-model="newItem.tax" type="number" class="form-control form-control-sm">
-                            </div>
-                            <div class="col-12">
-                                <button type="button" @click="addItem" class="btn btn-primary-orange w-100">
-                                    + Hissedar Ekle
-                                </button>
-                                <p class="text-muted small mt-2 mb-0">En fazla 7 hissedar eklenebilir.</p>
-                            </div>
-                        </div>
+                            <!-- Genişletilmiş Ödeme Satırı -->
+                            <tr v-if="expandedRow === index" class="sh-expanded-row">
+                                <td colspan="12">
+                                    <div class="expanded-content">
+                                        <!-- Mevcut Ödemeler -->
+                                        <div v-if="item.paymentItems.length" class="payments-grid">
+                                            <div v-for="(pItem, i) in item.paymentItems" :key="i" class="payment-edit-card">
+                                                <div class="payment-edit-header">
+                                                    <span class="payment-edit-num">{{ i + 1 }}. Ödeme</span>
+                                                    <button type="button" @click="paymentRemoveItem(index, i)" class="pec-delete">Sil</button>
+                                                </div>
+                                                <div class="payment-edit-grid">
+                                                    <div>
+                                                        <label>Tutar</label>
+                                                        <input type="text" class="form-input" v-model="pItem.price" placeholder="0" />
+                                                    </div>
+                                                    <div>
+                                                        <label>Tarih</label>
+                                                        <input type="datetime-local" class="form-input" v-model="pItem.date" />
+                                                    </div>
+                                                    <div>
+                                                        <label>Taksit No</label>
+                                                        <input type="number" class="form-input" v-model="pItem.tax" />
+                                                    </div>
+                                                    <div>
+                                                        <label>Ödeme Şekli</label>
+                                                        <select class="form-input" v-model="pItem.payment_type">
+                                                            <option value="">Seçin...</option>
+                                                            <option value="Nakit Elden Alınan">Nakit Elden</option>
+                                                            <option value="Nakit Eft">Nakit EFT</option>
+                                                            <option value="Kredi Kartı">Kredi Kartı</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="payment-note-field">
+                                                        <label>Not</label>
+                                                        <input type="text" class="form-input" v-model="pItem.note" placeholder="Not..." />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Yeni Ödeme Ekle -->
+                                        <div class="new-payment-form">
+                                            <div class="npf-header">+ Yeni Ödeme Ekle</div>
+                                            <div class="payment-edit-grid">
+                                                <div>
+                                                    <label>Tutar *</label>
+                                                    <input type="text" class="form-input" v-model="paymentNewItem.price" placeholder="0" />
+                                                </div>
+                                                <div>
+                                                    <label>Tarih *</label>
+                                                    <input type="datetime-local" class="form-input" v-model="paymentNewItem.date" />
+                                                </div>
+                                                <div>
+                                                    <label>Taksit No</label>
+                                                    <input type="number" class="form-input" v-model="paymentNewItem.tax" />
+                                                </div>
+                                                <div>
+                                                    <label>Ödeme Şekli</label>
+                                                    <select class="form-input" v-model="paymentNewItem.payment_type">
+                                                        <option value="">Seçin...</option>
+                                                        <option value="Nakit Elden Alınan">Nakit Elden</option>
+                                                        <option value="Nakit Eft">Nakit EFT</option>
+                                                        <option value="Kredi Kartı">Kredi Kartı</option>
+                                                    </select>
+                                                </div>
+                                                <div class="payment-note-field">
+                                                    <label>Not</label>
+                                                    <input type="text" class="form-input" v-model="paymentNewItem.note" placeholder="Not..." />
+                                                </div>
+                                            </div>
+                                            <div class="npf-actions">
+                                                <button type="button" @click="paymentAddItem(index)" class="action-btn action-btn-primary">Ödeme Kaydet</button>
+                                                <button type="button" @click="submitForm" class="action-btn action-btn-ghost">Değişiklikleri Kaydet</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+
+                        <!-- Boş Satırlar (7'ye tamamla) -->
+                        <tr v-for="i in (7 - items.length)" :key="'empty-' + i" class="sh-row sh-row-empty">
+                            <td class="td-no td-no-empty">{{ items.length + i }}</td>
+                            <td colspan="10" class="td-empty-cell">—</td>
+                            <td class="td-actions-cell"></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="sh-tfoot">
+                            <td colspan="9" class="tf-label">GENEL TOPLAM</td>
+                            <td class="tf-total">{{ formattedAmountt(grandTotalPaid) }}</td>
+                            <td class="tf-remain">{{ formattedAmountt(grandTotalRemaining) }}</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Fotoğraf (alt kısım) -->
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <div class="bottom-card">
+                    <div class="bottom-card-header">Fotoğraf</div>
+                    <div class="p-3">
+                        <DropZone v-model="post.thumbnail" />
+                        <div class="field-error" v-for="msg in validationErrors?.thumbnail" :key="msg">{{ msg }}</div>
                     </div>
                 </div>
             </div>
@@ -296,7 +313,7 @@
 </template>
 
 <script setup>
-import { inject, onMounted, reactive, ref, watchEffect } from 'vue'
+import { inject, onMounted, reactive, ref, watchEffect, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import useCategories from '@/composables/categories'
 import usePosts from '@/composables/posts'
@@ -316,6 +333,8 @@ const todayDate = () => {
 }
 
 const items = ref([])
+const showAddForm = ref(false)
+const expandedRow = ref(null)
 const newItem = ref({ full_name: '', phone: '', vekalet: '', vekalet_phone: '', tax: 0, paymentItems: [] })
 const paymentNewItem = ref({ price: '', date: todayDate(), tax: 0, note: '', payment_type: '' })
 
@@ -346,10 +365,23 @@ const post = reactive({
 
 const route = useRoute()
 
+const sharePrice = computed(() => post.amount ? post.amount / 7 : 0)
 const totalPaid = (item) => item.paymentItems.reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0)
+const grandTotalPaid = computed(() => items.value.reduce((sum, item) => sum + totalPaid(item), 0))
+const grandTotalRemaining = computed(() => items.value.reduce((sum, item) => sum + (sharePrice.value - totalPaid(item)), 0))
 
-const formattedAmountt = (val) => new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(val)
-const formattedAmount = (val) => new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(val / 7)
+const remainClass = (item) => {
+    const remain = sharePrice.value - totalPaid(item)
+    if (remain <= 0) return 'td-remain-done'
+    return 'td-remain-pending'
+}
+
+const formattedAmountt = (val) => new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(val || 0)
+const formattedAmount = (val) => new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format((val || 0) / 7)
+const formatMini = (val) => {
+    const n = parseFloat(val) || 0
+    return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' ₺'
+}
 
 function submitForm() {
     post.share_holders_json = items.value
@@ -380,14 +412,18 @@ watchEffect(() => {
     items.value = postData.value.share_holders_json ?? []
 })
 
+const toggleRow = (index) => {
+    expandedRow.value = expandedRow.value === index ? null : index
+}
+
 const paymentAddItem = (index) => {
     if (paymentNewItem.value.price && paymentNewItem.value.date) {
         items.value[index].paymentItems.push({ ...paymentNewItem.value })
-        swal({ icon: 'success', title: 'Ödeme Hareketi Eklendi' })
         paymentNewItem.value = { price: '', date: todayDate(), tax: 0, note: '', payment_type: '' }
         submitForm()
+        swal({ icon: 'success', title: 'Ödeme Eklendi' })
     } else {
-        swal({ icon: 'warning', title: 'Lütfen zorunlu alanları doldurun!' })
+        swal({ icon: 'warning', title: 'Tutar ve tarih zorunludur!' })
     }
 }
 
@@ -403,156 +439,406 @@ const addItem = () => {
     }
     if (newItem.value.full_name && newItem.value.phone && newItem.value.vekalet && newItem.value.vekalet_phone) {
         items.value.push({ ...newItem.value, paymentItems: [] })
-        swal({ icon: 'success', title: `${newItem.value.full_name} hissedar olarak eklendi` })
         newItem.value = { full_name: '', phone: '', vekalet: '', vekalet_phone: '', tax: 0, paymentItems: [] }
+        showAddForm.value = false
         submitForm()
+        swal({ icon: 'success', title: 'Hissedar eklendi' })
     } else {
-        swal({ icon: 'warning', title: 'Lütfen zorunlu alanları doldurun!' })
+        swal({ icon: 'warning', title: 'Zorunlu alanları doldurun!' })
     }
 }
 
 const removeItem = (index) => {
     if (confirm('Bu hissedarı silmek istediğinize emin misiniz?')) {
         items.value.splice(index, 1)
+        if (expandedRow.value === index) expandedRow.value = null
         submitForm()
     }
 }
 </script>
 
 <style scoped>
-.page-header { display: flex; align-items: center; justify-content: space-between; }
-.page-title { font-weight: 700; margin: 0; color: #1a1f2e; }
-.page-subtitle { color: #6c757d; font-size: 0.875rem; margin: 0; }
-
-.admin-card {
-    border: none;
-    border-radius: 0.75rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    overflow: hidden;
-}
-
-.card-header-section {
-    padding: 0.85rem 1.25rem;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
+/* Top Bar */
+.top-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
 }
+.top-bar-left { display: flex; align-items: center; gap: 1rem; }
+.top-bar-right { display: flex; align-items: center; gap: 0.5rem; }
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.4rem;
+    border: 1px solid #dee2e6;
+    background: #fff;
+    transition: all 0.15s;
+}
+.back-btn:hover { color: #1a1f2e; border-color: #adb5bd; }
+.page-title { margin: 0; font-size: 1.1rem; font-weight: 700; color: #1a1f2e; }
 
-.section-title { margin: 0; font-weight: 600; font-size: 0.875rem; color: #495057; }
-
-.badge-count {
-    font-size: 0.75rem;
-    background: #e38d02;
-    color: #fff;
-    padding: 0.25rem 0.6rem;
-    border-radius: 1rem;
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
     font-weight: 600;
-}
-
-.btn-primary-orange {
-    background: #e38d02;
-    color: #fff;
+    text-decoration: none;
     border: none;
-    padding: 0.55rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: background 0.15s;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
 }
-.btn-primary-orange:hover:not(:disabled) { background: #c97c02; color: #fff; }
-.btn-primary-orange:disabled { opacity: 0.65; }
+.action-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.action-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.action-btn-primary { background: #1a1f2e; color: #fff; }
+.action-btn-success  { background: #2f9e44; color: #fff; }
+.action-btn-ghost { background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; }
 
-.empty-state {
-    padding: 2rem;
-    background: #f8f9fa;
-    border-radius: 0.5rem;
+.spin {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    display: inline-block;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.hissedar-card {
-    border: 1px solid #e9ecef;
-    border-radius: 0.75rem;
+/* Info Header Card (Excel başlık) */
+.info-header-card {
+    background: #fff;
+    border-radius: 0.875rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     overflow: hidden;
 }
-
-.hissedar-header {
+.info-header-row {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    background: #f0f4ff;
+    flex-wrap: wrap;
     border-bottom: 1px solid #e9ecef;
 }
-
-.hissedar-num {
-    font-weight: 600;
-    font-size: 0.875rem;
-    color: #3b5bdb;
-}
-
-.hissedar-body { padding: 1rem; }
-
-.payment-summary {
+.info-cell {
+    flex: 1;
+    min-width: 140px;
+    padding: 0.85rem 1rem;
+    border-right: 1px solid #e9ecef;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    background: #f8f9fa;
-    border-radius: 0.5rem;
-    padding: 0.6rem 0.75rem;
-    height: 100%;
-    justify-content: center;
+    gap: 0.35rem;
 }
-
-.pay-item { display: flex; justify-content: space-between; font-size: 0.8rem; }
-.pay-label { font-weight: 500; }
-.pay-val { font-weight: 700; }
-
-.sub-section-title {
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #6c757d;
-    margin-bottom: 0.75rem;
-}
-
-.payment-add-section {
-    background: #f8fff8;
-    border: 1px dashed #b7e4c7;
-    border-radius: 0.5rem;
-    padding: 0.75rem;
-}
-
-.payment-history { }
-
-.payment-row {
-    background: #f8f9fa;
-    border-radius: 0.5rem;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-    border: 1px solid #e9ecef;
-}
-
-.price-badge {
-    background: linear-gradient(135deg, #e38d02, #f5a623);
-    border-radius: 0.75rem;
-    padding: 1rem;
-    text-align: center;
-}
-
-.price-label {
-    display: block;
-    color: rgba(255,255,255,0.85);
-    font-size: 0.8rem;
-    font-weight: 500;
-    margin-bottom: 4px;
-}
-
-.price-value {
-    display: block;
-    color: #fff;
-    font-size: 1.3rem;
+.info-cell:last-child { border-right: none; }
+.info-cell-accent { background: #fffbf0; }
+.info-cell-muted { background: #f8f9fc; }
+.info-cell-sm { flex: 0 0 100px; min-width: 80px; }
+.info-label {
+    font-size: 0.7rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #868e96;
+}
+.info-input {
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a1f2e;
+    background: transparent;
+    width: 100%;
+    padding: 0;
+}
+.info-input:focus { color: #1a1f2e; }
+.info-input-wrap { display: flex; align-items: center; gap: 4px; }
+.info-unit { font-size: 0.85rem; color: #6c757d; font-weight: 500; }
+.info-value-computed {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2f9e44;
+}
+.info-select {
+    border: none;
+    outline: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1a1f2e;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+}
+.info-vselect { font-size: 0.8rem; }
+.info-note-row {
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.field-error { font-size: 0.75rem; color: #e03131; margin-top: 2px; }
+
+/* Shareholders Card */
+.shareholders-card {
+    background: #fff;
+    border-radius: 0.875rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    overflow: hidden;
+}
+.shareholders-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.25rem;
+    background: #f8f9fc;
+    border-bottom: 1px solid #e9ecef;
+}
+.sh-header-left { display: flex; align-items: center; gap: 0.75rem; }
+.sh-title { margin: 0; font-weight: 700; font-size: 0.95rem; color: #1a1f2e; }
+.sh-badge {
+    background: #e38d02;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1rem;
+}
+.add-shareholder-btn {
+    display: inline-flex;
+    align-items: center;
+    background: #1a1f2e;
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.add-shareholder-btn:hover { opacity: 0.85; }
+
+/* Add Form Row */
+.add-form-row {
+    padding: 1rem 1.25rem;
+    background: #f0f4ff;
+    border-bottom: 1px solid #dde4f5;
+}
+.add-form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+.add-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 140px;
+}
+.add-form-field label { font-size: 0.75rem; font-weight: 600; color: #495057; }
+.add-form-actions { flex-direction: row; gap: 0.5rem; flex: 0 0 auto; min-width: auto; }
+
+.form-input {
+    border: 1px solid #dee2e6;
+    border-radius: 0.4rem;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.85rem;
+    outline: none;
+    background: #fff;
+    width: 100%;
+    transition: border-color 0.15s;
+}
+.form-input:focus { border-color: #1a1f2e; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+.sh-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    min-width: 1000px;
+}
+.sh-thead-accent {
+    background: linear-gradient(to right, #e38d02, #f5a623);
+    color: #fff;
+}
+.sh-thead-accent th {
+    padding: 0.75rem 0.75rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: none;
+    white-space: nowrap;
+}
+.th-no { width: 36px; text-align: center; }
+.th-payment { min-width: 110px; }
+.th-total { min-width: 100px; background: rgba(0,0,0,0.1); }
+.th-remain { min-width: 100px; }
+.th-actions { width: 80px; text-align: center; }
+
+.sh-row td { padding: 0.55rem 0.75rem; border-bottom: 1px solid #f1f3f5; vertical-align: middle; }
+.sh-row:hover td { background: #fffbf0; }
+.sh-row-expanded td { background: #f0f4ff !important; }
+
+.sh-row-empty td { background: #fafafa; color: #dee2e6; }
+.td-no { text-align: center; font-weight: 700; font-size: 0.8rem; color: #adb5bd; }
+.td-no-empty { color: #dee2e6; }
+.td-empty-cell { color: #dee2e6; font-size: 0.8rem; text-align: center; }
+
+.td-input {
+    border: 1px solid transparent;
+    border-radius: 0.35rem;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.82rem;
+    width: 100%;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    min-width: 90px;
+}
+.td-input:hover, .td-input:focus { border-color: #dee2e6; background: #fff; }
+.td-input-sm { min-width: 50px; max-width: 60px; }
+
+.td-payment { }
+.payment-cell-filled {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.pc-amount { font-weight: 700; color: #2f9e44; font-size: 0.8rem; }
+.pc-type { font-size: 0.7rem; color: #868e96; }
+.empty-payment { color: #dee2e6; font-size: 0.8rem; }
+
+.td-total { font-weight: 700; color: #2f9e44; text-align: right; }
+.td-remain { font-weight: 700; text-align: right; }
+.td-remain-done { color: #2f9e44; }
+.td-remain-pending { color: #e03131; }
+
+.td-actions-cell { text-align: center; white-space: nowrap; }
+.row-btn {
+    border: none;
+    border-radius: 0.35rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    margin: 0 1px;
+}
+.row-btn:hover { opacity: 0.75; }
+.row-btn-blue { background: #dde4f5; color: #3b5bdb; }
+.row-btn-red { background: #ffe0e0; color: #e03131; }
+
+/* Footer */
+.sh-tfoot td {
+    padding: 0.75rem 0.75rem;
+    background: #f1f3f5;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-top: 2px solid #dee2e6;
+}
+.tf-label { text-align: right; color: #495057; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.3px; }
+.tf-total { text-align: right; color: #2f9e44; }
+.tf-remain { text-align: right; color: #e03131; }
+
+/* Expanded Row */
+.sh-expanded-row td { padding: 0; background: #f0f4ff; }
+.expanded-content { padding: 1.25rem; }
+
+.payments-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+.payment-edit-card {
+    background: #fff;
+    border: 1px solid #dde4f5;
+    border-radius: 0.6rem;
+    overflow: hidden;
+    min-width: 280px;
+    flex: 1;
+}
+.payment-edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    background: #e8edff;
+    border-bottom: 1px solid #dde4f5;
+}
+.payment-edit-num { font-size: 0.8rem; font-weight: 700; color: #3b5bdb; }
+.pec-delete {
+    border: none;
+    background: #ffe0e0;
+    color: #e03131;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+}
+
+.payment-edit-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem;
+}
+.payment-edit-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+    min-width: 110px;
+}
+.payment-edit-grid label { font-size: 0.72rem; font-weight: 600; color: #6c757d; }
+.payment-note-field { flex: 2 !important; min-width: 180px !important; }
+
+.new-payment-form {
+    background: #f0fff4;
+    border: 1px dashed #b2f2bb;
+    border-radius: 0.6rem;
+    overflow: hidden;
+}
+.npf-header {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #2f9e44;
+    border-bottom: 1px dashed #b2f2bb;
+}
+.new-payment-form .payment-edit-grid { padding: 0.75rem; }
+.npf-actions {
+    padding: 0.75rem;
+    padding-top: 0;
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Bottom Cards */
+.bottom-card {
+    background: #fff;
+    border-radius: 0.875rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    overflow: hidden;
+}
+.bottom-card-header {
+    padding: 0.75rem 1rem;
+    background: #f8f9fc;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #495057;
 }
 </style>
