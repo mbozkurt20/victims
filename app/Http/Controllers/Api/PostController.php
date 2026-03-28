@@ -167,6 +167,17 @@ class PostController extends Controller
         }
     }
 
+    public function restore($id)
+    {
+        $this->authorize('post-delete');
+        $post = Post::withTrashed()->findOrFail($id);
+        if ($post->user_id !== auth()->id() && !auth()->user()->hasPermissionTo('post-all')) {
+            return response()->json(['status' => 405, 'success' => false, 'message' => 'You can only restore your own posts']);
+        }
+        $post->restore();
+        return response()->json(['success' => true]);
+    }
+
     public function getPosts()
     {
         $posts = Post::with('categories')->with('media')->latest()->paginate();

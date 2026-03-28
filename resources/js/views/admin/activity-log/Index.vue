@@ -64,7 +64,20 @@
                                     </span>
                                     <span class="activity-time" :title="activity.created_at_full">{{ activity.format_created_at }}</span>
                                 </div>
-                                <p class="activity-desc">{{ activity.description }}</p>
+                                <div class="activity-desc-row">
+                                    <p class="activity-desc">{{ activity.description }}</p>
+                                    <button v-if="activity.restorable"
+                                            @click="restorePost(activity)"
+                                            :disabled="restoringId === activity.id"
+                                            class="restore-btn">
+                                        <svg v-if="restoringId !== activity.id" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                                            <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                                        </svg>
+                                        <span v-if="restoringId === activity.id" class="restore-spin"></span>
+                                        {{ restoringId === activity.id ? 'Geri alınıyor...' : 'Geri Al' }}
+                                    </button>
+                                </div>
                                 <div class="activity-meta">
                                     <span v-if="activity.changed_fields" class="changed-fields">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16" style="margin-right:3px">
@@ -106,13 +119,28 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
+import { watch, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import useActivityLogs from '@/composables/activityLogs.js'
 
 const { activities, getActivityLogs, activeFilter, searchTerm, currentPage, rangeStart, rangeEnd, totalPages, total, updateFilter, applyFilters, changePage } = useActivityLogs()
 
 const route = useRoute()
+const swal = inject('$swal')
+const restoringId = ref(null)
+
+const restorePost = async (activity) => {
+    try {
+        restoringId.value = activity.id
+        await axios.post(`/api/posts/${activity.subject_id}/restore`)
+        swal({ icon: 'success', title: 'Kurban geri alındı!', timer: 1800, showConfirmButton: false })
+        getActivityLogs()
+    } catch {
+        swal({ icon: 'error', title: 'Geri alma başarısız.' })
+    } finally {
+        restoringId.value = null
+    }
+}
 
 const eventLabel = (event) => {
     const labels = {
@@ -249,7 +277,42 @@ watch(
 }
 
 .activity-time { font-size: 0.75rem; color: #adb5bd; margin-left: auto; white-space: nowrap; }
-.activity-desc { font-size: 0.875rem; color: #1a1f2e; font-weight: 600; margin-bottom: 4px; }
+
+.activity-desc-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 4px;
+}
+.activity-desc { font-size: 0.875rem; color: #1a1f2e; font-weight: 600; margin: 0; }
+
+.restore-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.65rem;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    border-radius: 1rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+.restore-btn:hover:not(:disabled) { background: #ffc107; color: #fff; border-color: #ffc107; }
+.restore-btn:disabled { opacity: 0.65; cursor: default; }
+.restore-spin {
+    width: 10px; height: 10px;
+    border: 2px solid rgba(133,100,4,0.3);
+    border-top-color: #856404;
+    border-radius: 50%;
+    animation: sp .6s linear infinite;
+    display: inline-block;
+}
+@keyframes sp { to { transform: rotate(360deg); } }
 
 .activity-meta {
     display: flex;

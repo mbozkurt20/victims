@@ -24,6 +24,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('users', UserController::class);
     Route::get('posts/next-order', [PostController::class, 'nextOrder']);
     Route::post('posts/reorder', [PostController::class, 'reorder']);
+    Route::post('posts/{id}/restore', [PostController::class, 'restore']);
     Route::apiResource('posts', PostController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('roles', RoleController::class);
