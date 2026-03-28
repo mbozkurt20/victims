@@ -133,7 +133,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="post in posts.data" :key="post.id" class="table-row">
+                        <template v-for="post in posts.data" :key="post.id">
+                        <tr class="table-row" :class="{ 'row-expanded': expandedEdit === post.id }">
                             <td class="td-id">{{ post.id }}</td>
                             <td class="td-title">{{ post.title }}</td>
                             <td class="td-amount">{{ post.amount }}₺</td>
@@ -151,11 +152,12 @@
                             </td>
                             <td>{{ post.created_at }}</td>
                             <td class="td-actions">
-                                <router-link v-if="can('post-edit')"
-                                             :to="{ name: 'posts.edit', params: { id: post.id } }"
-                                             class="table-btn table-btn-primary">
-                                    Düzenle
-                                </router-link>
+                                <button v-if="can('post-edit')"
+                                        @click="expandedEdit = expandedEdit === post.id ? null : post.id"
+                                        class="table-btn"
+                                        :class="expandedEdit === post.id ? 'table-btn-active' : 'table-btn-primary'">
+                                    {{ expandedEdit === post.id ? '▲ Kapat' : '▼ Düzenle' }}
+                                </button>
                                 <a :href="`/victims-posts-excel/${post.id}`" class="table-btn table-btn-success">
                                     Excel
                                 </a>
@@ -165,6 +167,16 @@
                                 </a>
                             </td>
                         </tr>
+                        <tr v-if="expandedEdit === post.id" class="edit-panel-row">
+                            <td colspan="11" style="padding:0">
+                                <PostEditPanel
+                                    :postId="post.id"
+                                    @close="expandedEdit = null"
+                                    @saved="getPosts()"
+                                />
+                            </td>
+                        </tr>
+                        </template>
                     </tbody>
                 </table>
             </div>
@@ -182,6 +194,7 @@ import { ref, onMounted, watch } from 'vue'
 import usePosts from '@/composables/posts'
 import useCategories from '@/composables/categories'
 import { useAbility } from '@casl/vue'
+import PostEditPanel from '@/components/PostEditPanel.vue'
 
 const search_category = ref('')
 const search_id = ref('')
@@ -190,6 +203,7 @@ const search_content = ref('')
 const search_global = ref('')
 const orderColumn = ref('created_at')
 const orderDirection = ref('desc')
+const expandedEdit = ref(null)
 const { posts, getPosts, deletePost } = usePosts()
 const { categoryList, getCategoryList } = useCategories()
 const { can } = useAbility()
@@ -481,6 +495,10 @@ const statusPreview = (status) => {
 .table-btn-primary { background: #3b5bdb; color: #fff; }
 .table-btn-success  { background: #2f9e44; color: #fff; }
 .table-btn-danger   { background: #e03131; color: #fff; }
+.table-btn-active   { background: #1a1f2e; color: #fff; }
+
+.row-expanded td { background: #f0f4ff !important; }
+.edit-panel-row td { border-bottom: 3px solid #1a1f2e; }
 
 /* Pagination */
 .posts-pagination {
