@@ -106,8 +106,8 @@
                         <input v-model="newItem.phone" type="text" class="form-input" placeholder="05xx xxx xx xx" />
                     </div>
                     <div class="add-form-field">
-                        <label>Vekalet İsim *</label>
-                        <input v-model="newItem.vekalet" type="text" class="form-input" placeholder="Vekalet İsim" />
+                        <label>Vekalet *</label>
+                        <input v-model="newItem.vekalet" type="text" class="form-input" placeholder="Vekalet isim..." />
                     </div>
                     <div class="add-form-field">
                         <label>Vekalet Tel *</label>
@@ -303,7 +303,7 @@
                 <div class="bottom-card">
                     <div class="bottom-card-header">Fotoğraf</div>
                     <div class="p-3">
-                        <DropZone v-model="post.thumbnail" />
+                        <PhotoUploadButton v-model="post.thumbnail" />
                         <div class="field-error" v-for="msg in validationErrors?.thumbnail" :key="msg">{{ msg }}</div>
                     </div>
                 </div>
@@ -320,7 +320,7 @@ import usePosts from '@/composables/posts'
 import { useForm, useField, defineRule } from 'vee-validate'
 import { required, min } from '@/validation/rules'
 import TextEditorComponent from '@/components/TextEditorComponent.vue'
-import DropZone from '@/components/DropZone.vue'
+import PhotoUploadButton from '@/components/PhotoUploadButton.vue'
 
 defineRule('required', required)
 defineRule('min', min)
@@ -668,7 +668,7 @@ const removeItem = (index) => {
     min-width: 1000px;
 }
 .sh-thead-accent {
-    background: linear-gradient(to right, #e38d02, #f5a623);
+    background: linear-gradient(to right, #7a4500, #a05c00);
     color: #fff;
 }
 .sh-thead-accent th {

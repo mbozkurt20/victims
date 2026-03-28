@@ -98,7 +98,7 @@
                             <h6 class="section-title">Fotoğraf</h6>
                         </div>
                         <div class="card-body p-4">
-                            <DropZone v-model="post.thumbnail"/>
+                            <PhotoUploadButton v-model="post.thumbnail"/>
                             <div class="text-danger small mt-1">
                                 <div v-for="msg in validationErrors?.thumbnail" :key="msg">{{ msg }}</div>
                             </div>
@@ -113,7 +113,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
 import TextEditorComponent from '@/components/TextEditorComponent.vue'
-import DropZone from '@/components/DropZone.vue'
+import PhotoUploadButton from '@/components/PhotoUploadButton.vue'
 import useCategories from '@/composables/categories'
 import usePosts from '@/composables/posts'
 import { useForm, useField, defineRule } from 'vee-validate'
