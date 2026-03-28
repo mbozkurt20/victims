@@ -95,6 +95,7 @@
                 <table class="posts-table">
                     <thead>
                         <tr>
+                            <th class="th-drag" title="Sürükleyerek sıralamayı değiştirin">≡</th>
                             <th class="th-sortable" @click="updateOrdering('id')">
                                 <span :class="{ 'active-col': orderColumn === 'id' }">ID</span>
                                 <span class="sort-arrows">
@@ -132,9 +133,10 @@
                             <th>İşlemler</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody ref="tbodyRef">
                         <template v-for="post in posts.data" :key="post.id">
-                        <tr class="table-row" :class="{ 'row-expanded': expandedEdit === post.id }">
+                        <tr class="table-row" :class="{ 'row-expanded': expandedEdit === post.id }" :data-id="post.id">
+                            <td class="td-drag-handle" title="Taşımak için sürükleyin">⠿</td>
                             <td class="td-id">{{ post.id }}</td>
                             <td class="td-title">{{ post.title }}</td>
                             <td class="td-amount">{{ post.amount }}₺</td>
@@ -167,8 +169,8 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr v-if="expandedEdit === post.id" class="edit-panel-row">
-                            <td colspan="11" style="padding:0">
+                        <tr v-if="expandedEdit === post.id" class="edit-panel-row" data-no-drag>
+                            <td colspan="12" style="padding:0">
                                 <PostEditPanel
                                     :postId="post.id"
                                     @close="expandedEdit = null"
@@ -190,11 +192,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import usePosts from '@/composables/posts'
 import useCategories from '@/composables/categories'
 import { useAbility } from '@casl/vue'
 import PostEditPanel from '@/components/PostEditPanel.vue'
+import Sortable from 'sortablejs'
 
 const search_category = ref('')
 const search_id = ref('')
@@ -204,6 +207,7 @@ const search_global = ref('')
 const orderColumn = ref('created_at')
 const orderDirection = ref('desc')
 const expandedEdit = ref(null)
+const tbodyRef = ref(null)
 const { posts, getPosts, deletePost } = usePosts()
 const { categoryList, getCategoryList } = useCategories()
 const { can } = useAbility()
@@ -214,7 +218,36 @@ onMounted(() => {
     getPosts()
     getCategoryList()
     getStatistics()
+    nextTick(initSortable)
 })
+
+let sortableInstance = null
+
+const initSortable = () => {
+    if (!tbodyRef.value) return
+    if (sortableInstance) sortableInstance.destroy()
+    sortableInstance = Sortable.create(tbodyRef.value, {
+        handle: '.td-drag-handle',
+        draggable: '.table-row',
+        animation: 150,
+        ghostClass: 'drag-ghost',
+        chosenClass: 'drag-chosen',
+        onEnd({ item, newIndex }) {
+            // Collect only the data rows (ignore panel rows)
+            const rows = [...tbodyRef.value.querySelectorAll('tr.table-row')]
+            const orders = rows.map((tr, idx) => ({
+                id: parseInt(tr.dataset.id),
+                order: idx + 1
+            }))
+            // Update reactive data order display
+            orders.forEach(({ id, order }) => {
+                const post = posts.value.data?.find(p => p.id === id)
+                if (post) post.order = order
+            })
+            axios.post('/api/posts/reorder', { orders })
+        }
+    })
+}
 
 const getStatistics = async () => {
     try {
@@ -264,6 +297,10 @@ watch(search_content, (current) => {
 watch(search_global, _.debounce((current) => {
     getPosts(1, search_category.value, search_id.value, search_title.value, search_content.value, current)
 }, 200))
+
+watch(() => posts.value?.data, () => {
+    nextTick(initSortable)
+})
 
 const statusPreview = (status) => {
     if (status === 'sold') return '<span class="text-success">Satışta</span>'
@@ -422,6 +459,29 @@ const statusPreview = (status) => {
 .status-dark    { color: #1a1f2e; border-color: #dee2e6; }
 .status-dark .status-dot { background: #1a1f2e; }
 .status-dark:hover { background: #f1f3f5; }
+
+/* Drag */
+.th-drag {
+    width: 32px;
+    text-align: center;
+    color: #adb5bd;
+    font-size: 1rem;
+    user-select: none;
+}
+.td-drag-handle {
+    width: 32px;
+    text-align: center;
+    cursor: grab;
+    color: #ced4da;
+    font-size: 1.1rem;
+    user-select: none;
+    transition: color 0.15s;
+}
+.td-drag-handle:hover { color: #868e96; }
+.td-drag-handle:active { cursor: grabbing; }
+
+.drag-ghost { opacity: 0.4; background: #e8edff !important; }
+.drag-chosen { background: #f0f4ff !important; box-shadow: 0 4px 16px rgba(59,91,219,0.15); }
 
 /* Table */
 .posts-table {

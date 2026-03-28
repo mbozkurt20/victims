@@ -165,13 +165,19 @@
             </div>
             <div class="container">
                 <div class="visual-grid">
-                    <div class="visual-images">
-                        <div class="vi-full">
-                            <img src="/images/saf2.jpg" alt="Kurban hizmetleri" loading="lazy" />
-                            <div class="vi-badge-overlay">
-                                <span class="vi-badge-icon">☽</span>
-                                <span class="vi-badge-label">Kurban Bayramı 2025</span>
-                            </div>
+                    <!-- Kurban Bayramı 2026 dekoratif kart -->
+                    <div class="bay-card">
+                        <div class="bay-geo-wrap">
+                            <GeomStar :size="320" opacity="0.12" color="#d4af37" />
+                        </div>
+                        <div class="bay-inner">
+                            <div class="bay-crescent">☽</div>
+                            <div class="bay-arabic">عِيدٌ مُبَارَكٌ</div>
+                            <h2 class="bay-title">Kurban Bayramı</h2>
+                            <div class="bay-year">2026</div>
+                            <div class="bay-divider"></div>
+                            <p class="bay-sub">İslami usullere uygun, güvenilir ve şeffaf kurban hizmetleri</p>
+                            <div class="bay-stars">✦ ✦ ✦</div>
                         </div>
                     </div>
                     <div class="visual-text">
@@ -375,9 +381,9 @@ const GeomStar = defineComponent({
     inset: 0;
     background: linear-gradient(
         160deg,
-        rgba(10, 20, 10, 0.82) 0%,
-        rgba(20, 45, 20, 0.75) 50%,
-        rgba(5, 15, 5, 0.88) 100%
+        rgba(10, 15, 25, 0.88) 0%,
+        rgba(26, 31, 46, 0.78) 50%,
+        rgba(8, 12, 22, 0.92) 100%
     );
 }
 .hero-geo {
@@ -774,29 +780,89 @@ const GeomStar = defineComponent({
 }
 @media (max-width: 768px) { .visual-grid { grid-template-columns: 1fr; } }
 
-.visual-images { position: relative; }
-.vi-full { position: relative; border-radius: 1.25rem; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,0.15); }
-.vi-full img {
-    width: 100%;
+/* Bayram Kartı */
+.bay-card {
+    position: relative;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: linear-gradient(145deg, #0d1a2e, #1a2f4a, #0a1420);
     height: 480px;
-    object-fit: cover;
-    display: block;
-}
-.vi-badge-overlay {
-    position: absolute;
-    bottom: 1.25rem;
-    left: 1.25rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background: rgba(13, 43, 13, 0.85);
-    border: 1px solid rgba(212, 175, 55, 0.4);
-    backdrop-filter: blur(6px);
-    border-radius: 2rem;
-    padding: 0.45rem 1rem;
+    justify-content: center;
+    box-shadow: 0 16px 56px rgba(10,20,40,0.28);
+    border: 1px solid rgba(212,175,55,0.18);
 }
-.vi-badge-icon { font-size: 1.1rem; color: #d4af37; }
-.vi-badge-label { font-size: 0.8rem; color: rgba(255,255,255,0.9); font-weight: 700; }
+.bay-geo-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+.bay-inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    color: #fff;
+}
+.bay-crescent {
+    font-size: 3rem;
+    color: #d4af37;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 2px 8px rgba(212,175,55,0.5));
+}
+.bay-arabic {
+    font-size: 1.75rem;
+    color: #d4af37;
+    letter-spacing: 2px;
+    font-style: italic;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+.bay-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 0;
+    line-height: 1.1;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+    letter-spacing: -0.5px;
+}
+.bay-year {
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #b8860b, #d4af37, #f5d06e, #b8860b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0.25rem 0 1rem;
+    letter-spacing: -2px;
+}
+.bay-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    margin: 0 auto 1rem;
+}
+.bay-sub {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    max-width: 260px;
+    margin: 0 auto;
+}
+.bay-stars {
+    margin-top: 1rem;
+    color: #d4af37;
+    font-size: 0.7rem;
+    letter-spacing: 6px;
+    opacity: 0.7;
+}
 
 .visual-text .sec-title { margin-top: 0.5rem; }
 .visual-text p { color: #495057; line-height: 1.75; margin-bottom: 1.25rem; }

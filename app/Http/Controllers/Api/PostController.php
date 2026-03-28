@@ -107,6 +107,15 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
+    public function reorder(\Illuminate\Http\Request $request)
+    {
+        $this->authorize('post-edit');
+        foreach ($request->orders as $item) {
+            Post::where('id', $item['id'])->update(['order' => $item['order']]);
+        }
+        return response()->json(['success' => true]);
+    }
+
     public function show(Post $post)
     {
         $this->authorize('post-edit');
